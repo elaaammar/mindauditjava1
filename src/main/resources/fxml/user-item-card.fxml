@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+
+<HBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      spacing="15" alignment="CENTER_LEFT" 
+      style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2); -fx-cursor: hand;">
+    
+    <!-- Avatar with Initials -->
+    <StackPane>
+        <Circle radius="25" fill="#3498db" style="-fx-stroke: #ecf0f1; -fx-stroke-width: 2;"/>
+        <Label fx:id="initialsLabel" text="AA" style="-fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16;"/>
+    </StackPane>
+
+    <!-- User Info -->
+    <VBox spacing="2" HBox.hgrow="ALWAYS">
+        <Label fx:id="userNameLabel" text="Nom de l'utilisateur" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label fx:id="roleLabel" text="Rôle" style="-fx-text-fill: #7f8c8d; -fx-font-size: 12; -fx-background-color: #f1f2f6; -fx-padding: 2 8; -fx-background-radius: 10;"/>
+            <Circle fx:id="statusCircle" radius="4" fill="#27ae60"/>
+            <Label fx:id="statusLabel" text="En ligne" style="-fx-text-fill: #95a5a6; -fx-font-size: 11;"/>
+        </HBox>
+    </VBox>
+
+    <!-- Action Button (Like Facebook 'View Profile') -->
+    <Button text="Voir le profil" style="-fx-background-color: #f0f2f5; -fx-text-fill: #050505; -fx-font-weight: bold; -fx-background-radius: 6; -fx-padding: 8 15; -fx-cursor: hand;"/>
+
+</HBox>

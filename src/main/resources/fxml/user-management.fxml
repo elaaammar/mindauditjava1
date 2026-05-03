@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mindjavafx.controller.UserManagementController"
+            fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;">
+
+<VBox spacing="20" style="-fx-padding: 20;">
+    
+    
+    <!-- SEARCH + SORT BAR -->
+    <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-border-radius: 5;">
+        <Label text="Rechercher:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <ComboBox fx:id="searchTypeCombo" prefWidth="120"/>
+        <TextField fx:id="searchField" promptText="Entrez votre recherche..." prefWidth="250"/>
+        <Button text="🔍 Rechercher" onAction="#handleSearch" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;"/>
+        <Button text="🔄 Réinitialiser" onAction="#handleResetSearch" style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;"/>
+        
+        <Label text="Trier:" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50; -fx-padding: 0 0 0 30;"/>
+        <ComboBox fx:id="sortCombo" prefWidth="150"/>
+        <Button text="↕ Tri" onAction="#handleSort" style="-fx-background-color: #9b59b6; -fx-text-fill: white; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5;"/>
+    </HBox>
+    
+    <!-- TABLE + ADD BUTTON -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 5;">
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <Label text="Liste des utilisateurs" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Button text="➕ Ajouter" onAction="#handleAddUser" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 8 20; -fx-cursor: hand; -fx-background-radius: 5; -fx-font-weight: bold;"/>
+        </HBox>
+        
+        <TableView fx:id="userTable" prefHeight="300" minHeight="200" maxHeight="500" 
+                   onMouseClicked="#handleSelectUser">
+            <columns>
+                <TableColumn fx:id="idColumn" text="ID" prefWidth="50" minWidth="50"/>
+                <TableColumn fx:id="nomColumn" text="Nom" prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="emailColumn" text="Email" prefWidth="180" minWidth="150"/>
+                <TableColumn fx:id="telephoneColumn" text="Téléphone" prefWidth="110" minWidth="100"/>
+                <TableColumn fx:id="ageColumn" text="Âge" prefWidth="60" minWidth="50"/>
+                <TableColumn fx:id="roleColumn" text="Rôle" prefWidth="90" minWidth="80"/>
+                <TableColumn fx:id="passwordColumn" text="Mot de passe" prefWidth="120" minWidth="100"/>
+                <TableColumn fx:id="actifColumn" text="Statut" prefWidth="90" minWidth="80"/>
+            </columns>
+        </TableView>
+    </VBox>
+    
+    <!-- FORM SECTION -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-border-radius: 5;">
+        <HBox spacing="20" alignment="TOP_LEFT">
+            <!-- FORMULAIRE À GAUCHE -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS">
+                <Label text="📝 Formulaire Utilisateur" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                
+                <!-- Messages -->
+                <HBox spacing="10">
+                    <Label fx:id="errorLabel" text="" style="-fx-text-fill: #e74c3c; -fx-font-weight: bold;"/>
+                    <Label fx:id="successLabel" text="" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
+                </HBox>
+                
+                <!-- FORM -->
+                <GridPane hgap="10" vgap="10">
+                    <Label text="Nom:" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="nomField" GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="180" promptText="Nom complet"/>
+                    
+                    <Label text="Email:" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="emailField" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="180" promptText="email@example.com"/>
+                    
+                    <Label text="Mot de passe:" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <PasswordField fx:id="passwordField" GridPane.rowIndex="2" GridPane.columnIndex="1" prefWidth="180" promptText="Min. 6 caractères"/>
+                    
+                    <Label text="Âge:" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="ageField" GridPane.rowIndex="3" GridPane.columnIndex="1" prefWidth="180" promptText="Ex: 25"/>
+                    
+                    <Label text="Téléphone:" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <TextField fx:id="telephoneField" GridPane.rowIndex="4" GridPane.columnIndex="1" prefWidth="180" promptText="0612345678"/>
+                    
+                    <Label text="Rôle:" GridPane.rowIndex="5" GridPane.columnIndex="0" style="-fx-font-weight: bold;"/>
+                    <ComboBox fx:id="roleCombo" GridPane.rowIndex="5" GridPane.columnIndex="1" prefWidth="180"/>
+                    
+                    <CheckBox fx:id="actifCheckBox" text="Compte actif" selected="true" GridPane.rowIndex="6" GridPane.columnIndex="0" GridPane.columnSpan="2" style="-fx-font-weight: bold;"/>
+                </GridPane>
+            </VBox>
+            
+            <!-- BOUTONS À DROITE -->
+            <VBox spacing="15" alignment="CENTER" style="-fx-padding: 40 0 0 20;">
+                <Button text="💾 ENREGISTRER" onAction="#handleSaveUser" prefWidth="180"
+                       style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-padding: 15 20; -fx-cursor: hand; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 13;"/>
+                <Button text="✏️ MODIFIER" onAction="#handleUpdateUser" prefWidth="180"
+                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 15 20; -fx-cursor: hand; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 13;"/>
+                <Button text="🗑️ SUPPRIMER" onAction="#handleDeleteUser" prefWidth="180"
+                       style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 15 20; -fx-cursor: hand; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 13;"/>
+                <Button text="🔄 RÉINITIALISER" onAction="#handleAddUser" prefWidth="180"
+                       style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-padding: 15 20; -fx-cursor: hand; -fx-background-radius: 8; -fx-font-weight: bold; -fx-font-size: 13;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+</VBox>
+
+</ScrollPane>

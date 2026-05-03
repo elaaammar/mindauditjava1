@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mindjavafx.controller.ProfileController"
+            fitToWidth="true" style="-fx-background-color: #ecf0f1;">
+
+    <VBox spacing="20" style="-fx-padding: 30;">
+        
+        <!-- HEADER -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+            <Label text="👤 Mon Profil" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Personnalisez vos informations et gérez la sécurité de votre compte" style="-fx-font-size: 14; -fx-text-fill: #7f8c8d;"/>
+        </VBox>
+        
+        <HBox spacing="20">
+            <!-- LEFT: PROFILE INFO & EDIT -->
+            <VBox spacing="20" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                <Label text="Informations Personnelles" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                
+                <VBox alignment="CENTER" spacing="15">
+                    <StackPane>
+                        <Circle radius="50" fill="#3498db" style="-fx-stroke: #ecf0f1; -fx-stroke-width: 3;"/>
+                        <Label fx:id="initialsLabel" text="AA" style="-fx-text-fill: white; -fx-font-size: 30; -fx-font-weight: bold;"/>
+                    </StackPane>
+                    <Label fx:id="nomLabelHeader" text="Utilisateur" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label fx:id="roleLabelBadge" text="Rôle" style="-fx-background-color: #ecf0f1; -fx-text-fill: #7f8c8d; -fx-padding: 5 15; -fx-background-radius: 20; -fx-font-size: 12;"/>
+                </VBox>
+
+                <Separator/>
+
+                <GridPane hgap="20" vgap="20">
+                    <columnConstraints>
+                        <ColumnConstraints percentWidth="50"/>
+                        <ColumnConstraints percentWidth="50"/>
+                    </columnConstraints>
+
+                    <!-- Nom -->
+                    <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="0">
+                        <Label text="Nom complet" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <TextField fx:id="nomField" promptText="Votre nom" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"/>
+                    </VBox>
+
+                    <!-- Email (Non modifiable pour la sécurité) -->
+                    <VBox spacing="8" GridPane.rowIndex="0" GridPane.columnIndex="1">
+                        <Label text="Adresse Email" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <TextField fx:id="emailField" editable="false" style="-fx-padding: 10; -fx-background-color: #e9ecef; -fx-border-color: #dee2e6; -fx-border-radius: 5; -fx-text-fill: #6c757d;"/>
+                    </VBox>
+
+                    <!-- Âge -->
+                    <VBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="0">
+                        <Label text="Âge" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <TextField fx:id="ageField" promptText="Votre âge" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"/>
+                    </VBox>
+
+                    <!-- Téléphone -->
+                    <VBox spacing="8" GridPane.rowIndex="1" GridPane.columnIndex="1">
+                        <Label text="Téléphone" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <TextField fx:id="telephoneField" promptText="Votre numéro" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"/>
+                    </VBox>
+
+                    <!-- Rôle (Editable as requested) -->
+                    <VBox spacing="8" GridPane.rowIndex="2" GridPane.columnIndex="0">
+                        <Label text="Rôle" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <ComboBox fx:id="roleComboBox" maxWidth="Infinity" style="-fx-padding: 5; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Admin"/>
+                                    <String fx:value="User"/>
+                                    <String fx:value="Auditeur"/>
+                                </FXCollections>
+                            </items>
+                        </ComboBox>
+                    </VBox>
+
+                    <!-- Statut -->
+                    <VBox spacing="8" GridPane.rowIndex="2" GridPane.columnIndex="1">
+                        <Label text="Statut du compte" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label fx:id="statusLabel" text="Actif" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
+                            <Circle radius="5" fill="#27ae60"/>
+                        </HBox>
+                    </VBox>
+                </GridPane>
+
+                <Button text="💾 Enregistrer les modifications" onAction="#handleUpdateProfile" maxWidth="Infinity"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 12; -fx-background-radius: 5; -fx-font-weight: bold; -fx-cursor: hand; -fx-font-size: 14;"/>
+                <Label fx:id="profileMessageLabel" alignment="CENTER" maxWidth="Infinity" style="-fx-font-weight: bold;"/>
+            </VBox>
+
+            <!-- RIGHT: SECURITY & PASSWORD -->
+            <VBox spacing="20" prefWidth="400" style="-fx-background-color: white; -fx-padding: 30; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+                <Label text="Sécurité du Compte" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                
+                <VBox spacing="15">
+                    <Label text="Changer le mot de passe" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    
+                    <VBox spacing="8">
+                        <Label text="Ancien mot de passe" style="-fx-font-size: 12;"/>
+                        <PasswordField fx:id="oldPasswordField" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"/>
+                    </VBox>
+
+                    <VBox spacing="8">
+                        <Label text="Nouveau mot de passe" style="-fx-font-size: 12;"/>
+                        <PasswordField fx:id="newPasswordField" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"/>
+                    </VBox>
+
+                    <VBox spacing="8">
+                        <Label text="Confirmer le nouveau mot de passe" style="-fx-font-size: 12;"/>
+                        <PasswordField fx:id="confirmPasswordField" style="-fx-padding: 10; -fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 5;"/>
+                    </VBox>
+
+                    <Button text="🔐 Mettre à jour le mot de passe" onAction="#handleChangePassword" maxWidth="Infinity"
+                            style="-fx-background-color: #2c3e50; -fx-text-fill: white; -fx-padding: 12; -fx-background-radius: 5; -fx-font-weight: bold; -fx-cursor: hand;"/>
+                    <Label fx:id="passwordMessageLabel" alignment="CENTER" maxWidth="Infinity" style="-fx-font-weight: bold;"/>
+                </VBox>
+
+                <Separator/>
+
+                <VBox spacing="10">
+                    <Label text="Sessions actives" style="-fx-font-weight: bold; -fx-text-fill: #7f8c8d;"/>
+                    <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-padding: 10; -fx-background-color: #f1f9ff; -fx-background-radius: 5;">
+                        <Label text="🖥️" style="-fx-font-size: 20;"/>
+                        <VBox>
+                            <Label text="Windows - Session actuelle" style="-fx-font-weight: bold; -fx-font-size: 12;"/>
+                            <Label text="Dernière connexion: Aujourd'hui" style="-fx-text-fill: #7f8c8d; -fx-font-size: 11;"/>
+                        </VBox>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </VBox>
+</ScrollPane>

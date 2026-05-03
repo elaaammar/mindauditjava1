@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code de Vérification - MindAudit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .logo {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+        
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            color: #6b7280;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .email-display {
+            background: #f3f4f6;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            font-weight: 600;
+            color: #374151;
+        }
+        
+        .code-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .code-label {
+            color: white;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .code {
+            font-size: 3em;
+            font-weight: bold;
+            color: white;
+            letter-spacing: 10px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .timer {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .timer.expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+        
+        .instructions {
+            background: #eff6ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        
+        .instructions h3 {
+            color: #1e40af;
+            margin-bottom: 10px;
+        }
+        
+        .instructions ol {
+            margin-left: 20px;
+            color: #374151;
+        }
+        
+        .instructions li {
+            margin-bottom: 8px;
+        }
+        
+        .error {
+            background: #fee2e2;
+            color: #991b1b;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #dc2626;
+        }
+        
+        .loading {
+            font-size: 2em;
+            color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: transform 0.2s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .footer {
+            margin-top: 30px;
+            color: #6b7280;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔐</div>
+        <h1>Code de Vérification</h1>
+        <p class="subtitle">Réinitialisation de mot de passe</p>
+        
+        <div id="content">
+            <div class="loading">⏳ Chargement du code...</div>
+        </div>
+        
+        <div class="footer">
+            <p>MindAudit - Système de Gestion d'Audit Interne</p>
+        </div>
+    </div>
+    
+    <script>
+        // Récupérer l'email depuis l'URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const email = urlParams.get('email');
+        
+        if (!email) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <h3>❌ Erreur</h3>
+                    <p>Aucun email spécifié dans l'URL.</p>
+                    <p>Veuillez demander un code depuis l'application.</p>
+                </div>
+            `;
+        } else {
+            // Charger le code depuis l'API
+            loadVerificationCode(email);
+        }
+        
+        async function loadVerificationCode(email) {
+            try {
+                const response = await fetch(`http://localhost:9000/api/password-reset/code?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                
+                if (data.success) {
+                    displayCode(data.data);
+                } else {
+                    displayError(data.message);
+                }
+            } catch (error) {
+                displayError('Impossible de se connecter à l\'API. Assurez-vous que l\'application est lancée.');
+            }
+        }
+        
+        function displayCode(data) {
+            const expiresIn = data.expiresIn;
+            
+            document.getElementById('content').innerHTML = `
+                <div class="email-display">
+                    📧 ${data.email}
+                </div>
+                
+                <div class="code-container">
+                    <div class="code-label">Votre code de vérification</div>
+                    <div class="code">${data.code}</div>
+                </div>
+                
+                <div class="timer" id="timer">
+                    ⏱️ Code valide pendant <span id="countdown">${Math.floor(expiresIn)}</span> secondes
+                </div>
+                
+                <div class="instructions">
+                    <h3>📋 Instructions</h3>
+                    <ol>
+                        <li>Copiez le code ci-dessus</li>
+                        <li>Retournez dans l'application MindAudit</li>
+                        <li>Entrez ce code dans le champ de vérification</li>
+                        <li>Créez votre nouveau mot de passe</li>
+                    </ol>
+                </div>
+                
+                <button class="btn" onclick="copyCode('${data.code}')">
+                    📋 Copier le code
+                </button>
+            `;
+            
+            // Démarrer le compte à rebours
+            startCountdown(expiresIn);
+        }
+        
+        function displayError(message) {
+            document.getElementById('content').innerHTML = `
+                <div class="error">
+                    <h3>❌ Erreur</h3>
+                    <p>${message}</p>
+                    <br>
+                    <button class="btn" onclick="window.close()">Fermer</button>
+                </div>
+            `;
+        }
+        
+        function startCountdown(seconds) {
+            let remaining = Math.floor(seconds);
+            const countdownEl = document.getElementById('countdown');
+            const timerEl = document.getElementById('timer');
+            
+            const interval = setInterval(() => {
+                remaining--;
+                
+                if (remaining <= 0) {
+                    clearInterval(interval);
+                    timerEl.className = 'timer expired';
+                    timerEl.innerHTML = '❌ Code expiré! Demandez un nouveau code.';
+                } else {
+                    countdownEl.textContent = remaining;
+                    
+                    // Changer la couleur si moins de 60 secondes
+                    if (remaining < 60) {
+                        timerEl.style.background = '#fee2e2';
+                        timerEl.style.color = '#991b1b';
+                    }
+                }
+            }, 1000);
+        }
+        
+        function copyCode(code) {
+            navigator.clipboard.writeText(code).then(() => {
+                alert('✅ Code copié dans le presse-papiers!');
+            }).catch(() => {
+                alert('❌ Impossible de copier le code. Copiez-le manuellement.');
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+═══════════════════════════════════════════════════════════════
+🚀 GOOGLE OAUTH - GUIDE RAPIDE
+═══════════════════════════════════════════════════════════════
+
+✅ CODE CORRIGÉ - Prêt à compiler!
+
+📝 CE QUI A ÉTÉ FAIT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ GoogleOAuthService.java - COMPLET
+   - Serveur local sur port 8080
+   - Flux OAuth complet (code → token → user info)
+   - Gestion du callback automatique
+
+2. ✅ LoginController.java - CORRIGÉ
+   - Utilise addUser() (pas createUser)
+   - Utilise loginWithOAuth() (pas setCurrentUser)
+   - Constructeurs corrects pour User et Role
+
+3. ✅ module-info.java - OK
+   - requires java.desktop; déjà présent
+
+═══════════════════════════════════════════════════════════════
+⚠️ ACTION REQUISE - VOUS DEVEZ FAIRE CECI:
+═══════════════════════════════════════════════════════════════
+
+🔴 PROBLÈME ACTUEL:
+Votre client OAuth est de type "Desktop" mais le code utilise
+http://localhost:8080/callback qui nécessite un client "Web"
+
+🔧 SOLUTION (5 minutes):
+
+1. Allez sur: https://console.cloud.google.com/
+   → Projet: MindAudit
+   → APIs et services → Identifiants
+
+2. Cliquez: "+ CRÉER DES IDENTIFIANTS" → "ID client OAuth"
+
+3. Type d'application: "Application Web" ⚠️ PAS Desktop!
+
+4. Nom: MindAudit Web Client
+
+5. URI de redirection autorisés:
+   http://localhost:8080/callback
+
+6. Cliquez "CRÉER"
+
+7. COPIEZ le nouveau Client ID et Client Secret
+
+8. Ouvrez: src/main/java/com/example/mindjavafx/service/GoogleOAuthService.java
+
+9. Remplacez lignes 25-26:
+   private static final String CLIENT_ID = "VOTRE_NOUVEAU_CLIENT_ID";
+   private static final String CLIENT_SECRET = "VOTRE_NOUVEAU_SECRET";
+
+10. Recompilez: ./compile.bat
+
+═══════════════════════════════════════════════════════════════
+🎯 COMMENT ÇA VA MARCHER:
+═══════════════════════════════════════════════════════════════
+
+1. User clique "Continuer avec Google"
+2. Navigateur s'ouvre → Page de connexion Google
+3. User se connecte avec son compte Google
+4. Google redirige vers http://localhost:8080/callback
+5. L'application reçoit le code d'autorisation
+6. L'application échange le code contre un access token
+7. L'application récupère email + nom de l'utilisateur
+8. Si l'utilisateur n'existe pas → création automatique dans DB
+9. User est connecté → Dashboard s'ouvre
+
+═══════════════════════════════════════════════════════════════
+📧 VÉRIFIER LES UTILISATEURS TEST:
+═══════════════════════════════════════════════════════════════
+
+Sur Google Cloud Console:
+→ APIs et services → Écran de consentement OAuth
+→ Section "Utilisateurs test"
+→ Ajoutez votre email si pas déjà là
+
+═══════════════════════════════════════════════════════════════
+✅ APRÈS CONFIGURATION:
+═══════════════════════════════════════════════════════════════
+
+Le code est PRÊT! Juste:
+1. Créer le client Web sur Google Cloud
+2. Copier les identifiants dans GoogleOAuthService.java
+3. Compiler
+4. Tester
+
+═══════════════════════════════════════════════════════════════
+
+Pour plus de détails, voir: GOOGLE_OAUTH_SETUP.md

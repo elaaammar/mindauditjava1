@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.mindjavafx.controller.UserSearchResultsController"
+      spacing="20" style="-fx-padding: 30; -fx-background-color: #f0f2f5;">
+
+    <!-- HEADER STYLE FACEBOOK -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 3);">
+        <HBox alignment="CENTER_LEFT" spacing="15">
+            <Label text="🔍 Résultats de recherche" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1c1e21;"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="resultCountLabel" text="0 résultat(s)" style="-fx-font-size: 14; -fx-text-fill: #65676b; -fx-font-weight: bold;"/>
+        </HBox>
+        <Label fx:id="searchQueryLabel" text="Personnes correspondant à &quot;...&quot;" style="-fx-font-size: 14; -fx-text-fill: #65676b;"/>
+    </VBox>
+
+    <!-- LIST OF CARDS -->
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+        <VBox fx:id="resultsContainer" spacing="12" style="-fx-padding: 5 10 20 10;">
+            <!-- User cards will be added here dynamically -->
+            <Label fx:id="noResultsLabel" text="Aucun compte trouvé." visible="false" style="-fx-font-size: 16; -fx-text-fill: #65676b; -fx-padding: 50;"/>
+        </VBox>
+    </ScrollPane>
+
+</VBox>

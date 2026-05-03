@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox spacing="20" alignment="CENTER" style="-fx-padding: 40; -fx-background-color: #ecf0f1;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <Label text="🔔 Toutes les Notifications" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    <Label text="Historique de vos alertes et notifications." style="-fx-font-size: 14; -fx-text-fill: #7f8c8d;"/>
+    <ListView prefHeight="400" style="-fx-background-radius: 10;"/>
+</VBox>
