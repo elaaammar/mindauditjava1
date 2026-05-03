@@ -1,0 +1,210 @@
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║              COMMANDES POUR DÉMARRER L'API REST                ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝
+
+
+🔧 DANS INTELLIJ IDEA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. RECHARGER MAVEN
+   → Clic droit sur pom.xml
+   → Maven
+   → Reload Project
+   → Attends 1-2 minutes
+
+2. COMPILER
+   → Build
+   → Rebuild Project
+   → OU: Ctrl+Shift+F9
+
+3. LANCER
+   → Run
+   → Main
+   → OU: Shift+F10
+
+
+💻 AVEC MAVEN (SI DANS LE PATH)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Nettoyer
+mvn clean
+
+# Compiler
+mvn compile
+
+# Lancer
+mvn javafx:run
+
+
+🧪 TESTER L'API
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+OPTION 1: Interface Web
+   → Ouvre test-api.html dans Chrome/Firefox
+   → Clique sur les boutons
+
+OPTION 2: Script Batch
+   → Double-clique sur test-api.bat
+
+OPTION 3: Postman
+   → Ouvre Postman
+   → Import → MindAudit_API.postman_collection.json
+   → Exécute les requêtes
+
+OPTION 4: curl (Terminal)
+   → Voir ci-dessous
+
+
+🌐 COMMANDES CURL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# 1. Envoyer le code
+curl -X POST http://localhost:8080/api/forgot-password/send-code \
+  -H "Content-Type: application/json" \
+  -d "{\"contact\":\"admin@mindaudit.com\"}"
+
+# 2. Vérifier le code (remplace 123456 par le code reçu)
+curl -X POST http://localhost:8080/api/forgot-password/verify-code \
+  -H "Content-Type: application/json" \
+  -d "{\"contact\":\"admin@mindaudit.com\",\"code\":\"123456\"}"
+
+# 3. Réinitialiser le mot de passe
+curl -X POST http://localhost:8080/api/forgot-password/reset \
+  -H "Content-Type: application/json" \
+  -d "{\"contact\":\"admin@mindaudit.com\",\"code\":\"123456\",\"newPassword\":\"newpass123\"}"
+
+# 4. Renvoyer un nouveau code
+curl -X POST http://localhost:8080/api/forgot-password/resend-code \
+  -H "Content-Type: application/json" \
+  -d "{\"contact\":\"admin@mindaudit.com\"}"
+
+
+🔍 VÉRIFIER QUE L'API FONCTIONNE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Test simple (doit retourner erreur 400)
+curl http://localhost:8080/api/forgot-password/send-code
+
+# Test complet (doit retourner JSON avec success: true)
+curl -X POST http://localhost:8080/api/forgot-password/send-code \
+  -H "Content-Type: application/json" \
+  -d "{\"contact\":\"admin@mindaudit.com\"}"
+
+
+🗄️ VÉRIFIER LA BASE DE DONNÉES
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Voir le hash du mot de passe
+SELECT id, nom, email, password_hash 
+FROM userjava 
+WHERE email = 'admin@mindaudit.com';
+
+# Vérifier que le hash a changé après reset
+# (exécute avant et après le reset, le hash doit être différent)
+
+
+🐛 DÉPANNAGE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Si Maven ne fonctionne pas
+→ Utilise IntelliJ IDEA (méthode recommandée)
+
+# Si le port 8080 est occupé
+→ Arrête l'autre programme
+→ OU change le port dans ApiServer.java
+
+# Si l'API ne démarre pas
+→ Regarde la console pour les erreurs
+→ Vérifie que Maven a bien rechargé
+→ Rebuild le projet
+
+# Si curl ne fonctionne pas
+→ Utilise test-api.html ou Postman
+
+
+📊 VÉRIFICATIONS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ Maven rechargé
+✅ Projet compilé sans erreur
+✅ Application lancée
+✅ Message "API démarrée" dans console
+✅ Test curl fonctionne
+✅ test-api.html fonctionne
+✅ Postman fonctionne
+
+
+🎯 RACCOURCIS INTELLIJ
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Compiler:           Ctrl+F9
+Rebuild:            Ctrl+Shift+F9
+Lancer:             Shift+F10
+Arrêter:            Ctrl+F2
+Rechercher:         Ctrl+Shift+F
+Aller à la classe:  Ctrl+N
+
+
+📁 FICHIERS IMPORTANTS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Code:
+  src/main/java/com/example/mindjavafx/api/ForgotPasswordAPI.java
+  src/main/java/com/example/mindjavafx/api/ApiServer.java
+  src/main/java/com/example/mindjavafx/Main.java
+
+Config:
+  pom.xml
+  src/main/java/module-info.java
+
+Tests:
+  test-api.html
+  test-api.bat
+  MindAudit_API.postman_collection.json
+
+Doc:
+  START_HERE.md
+  PRESENTATION_API.md
+
+
+🎓 POUR PRÉSENTER AU PROF
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Lance l'application
+2. Montre le message "API démarrée"
+3. Ouvre Postman
+4. Exécute les 4 requêtes
+5. Montre les réponses JSON
+6. Connecte-toi avec le nouveau mot de passe
+
+Lis PRESENTATION_API.md pour le script complet.
+
+
+✅ CHECKLIST
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+□ Maven rechargé
+□ Projet compilé
+□ Application lancée
+□ API démarrée
+□ Testé avec curl
+□ Testé avec test-api.html
+□ Testé avec Postman
+□ Tout fonctionne
+
+
+🎉 C'EST PRÊT!
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Ton API REST est prête à être utilisée et présentée!
+
+Prochaine étape: Lis START_HERE.md
+
+
+╔════════════════════════════════════════════════════════════════╗
+║                                                                ║
+║           URL DE L'API: http://localhost:8080/                ║
+║                                                                ║
+╚════════════════════════════════════════════════════════════════╝

@@ -1,0 +1,113 @@
+# Implementation Plan
+
+- [x] 1. Write bug condition exploration test
+  - **Property 1: Bug Condition** - Correct Credentials Authentication Failure
+  - **CRITICAL**: This test MUST FAIL on unfixed code - failure confirms the bug exists
+  - **DO NOT attempt to fix the test or the code when it fails**
+  - **NOTE**: This test encodes the expected behavior - it will validate the fix when it passes after implementation
+  - **GOAL**: Surface counterexamples that demonstrate the bug exists
+  - **Scoped PBT Approach**: Scope the property to the concrete failing case: admin@mindaudit.com with password "admin123"
+  - Test that `AuthenticationService.login("admin@mindaudit.com", "admin123")` fails on unfixed code
+  - Test that `PasswordUtil.verifyPassword("admin123", "a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3")` returns false
+  - Test that the stored hash in database for admin@mindaudit.com is the incorrect hash (SHA-256 of "123")
+  - The test assertions should match the Expected Behavior Properties: authentication should succeed and return true
+  - Run test on UNFIXED code
+  - **EXPECTED OUTCOME**: Test FAILS (this is correct - it proves the bug exists)
+  - Document counterexamples found: authentication returns false, error message "Mot de passe incorrect", user cannot access dashboard
+  - Mark task complete when test is written, run, and failure is documented
+  - _Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3_
+
+- [x] 2. Write preservation property tests (BEFORE implementing fix)
+  - **Property 2: Preservation** - Invalid Input Rejection Behavior
+  - **IMPORTANT**: Follow observation-first methodology
+  - Observe behavior on UNFIXED code for non-buggy inputs (invalid credentials, wrong formats, etc.)
+  - Write property-based tests capturing observed behavior patterns from Preservation Requirements
+  - Test invalid email format rejection: verify "Email invalide" error for malformed emails
+  - Test wrong password rejection: verify "Mot de passe incorrect" error for incorrect passwords
+  - Test non-existent user rejection: verify "Utilisateur introuvable" error for unknown emails
+  - Test disabled account rejection: verify "Le compte est désactivé" error for inactive accounts
+  - Test empty fields rejection: verify "Email et mot de passe requis" error for empty inputs
+  - Test short password rejection: verify "Mot de passe invalide (min 6 caractères)" error for passwords < 6 chars
+  - Test database error handling: verify appropriate error messages for connection failures
+  - Property-based testing generates many test cases for stronger guarantees
+  - Run tests on UNFIXED code
+  - **EXPECTED OUTCOME**: Tests PASS (this confirms baseline behavior to preserve)
+  - Mark task complete when tests are written, run, and passing on unfixed code
+  - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
+
+- [ ] 3. Fix for login authentication failure with correct credentials
+
+  - [ ] 3.1 Update database password hash for admin@mindaudit.com
+    - Execute SQL UPDATE statement to change password_hash to correct SHA-256 hash of "admin123"
+    - New hash value: `240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9`
+    - Verify the update was successful by querying the database
+    - _Bug_Condition: isBugCondition(input) where input.email == "admin@mindaudit.com" AND input.password == "admin123" AND storedHash != hashPassword("admin123")_
+    - _Expected_Behavior: Authentication succeeds, currentUser is set, dashboard loads_
+    - _Preservation: All validation checks (email format, password length, account status, user existence, empty fields, database errors) remain unchanged_
+    - _Requirements: 1.1, 1.2, 1.3, 2.1, 2.2, 2.3_
+
+  - [ ] 3.2 Remove debug bypass code from AuthenticationService.java
+    - Remove the debug mode code that bypasses authentication for admin@mindaudit.com
+    - Delete the conditional block: `if (email.equals("admin@mindaudit.com")) { ... return true; }`
+    - Ensure all users go through proper password verification via PasswordUtil.verifyPassword()
+    - _Bug_Condition: Debug bypass allows login without proper password verification_
+    - _Expected_Behavior: All authentication attempts use proper hash-based password verification_
+    - _Preservation: All validation logic and error handling remain unchanged_
+    - _Requirements: 2.2, 2.3_
+
+  - [ ] 3.3 Remove plaintext password bypass from PasswordUtil.java
+    - Remove the compatibility mode code that accepts plaintext passwords
+    - Delete the conditional block: `if (storedHash.equals("admin123") && inputPassword.equals("admin123")) { ... return true; }`
+    - Ensure password verification always uses hash comparison
+    - Optionally remove or reduce debug logging statements to prevent hash exposure
+    - _Bug_Condition: Plaintext bypass allows authentication without proper hashing_
+    - _Expected_Behavior: Password verification always compares SHA-256 hashes_
+    - _Preservation: Hash generation and comparison logic remain unchanged_
+    - _Requirements: 2.2_
+
+  - [ ] 3.4 Update SQL scripts for future database setups (optional)
+    - Update mindaudit.sql INSERT statement with correct password hash
+    - Change hash from `a665a45920422f9d417e4867efdc4fb8a04a1f3fff1fa07e998e86f7f7a27ae3` to `240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9`
+    - Update any other SQL setup scripts (setup-database.sql, QUICK_SETUP.sql) if they contain admin user creation
+    - Prevents recurrence of this bug in future database initializations
+    - _Requirements: 2.1, 2.2_
+
+  - [ ] 3.5 Verify bug condition exploration test now passes
+    - **Property 1: Expected Behavior** - Correct Credentials Authentication Success
+    - **IMPORTANT**: Re-run the SAME test from task 1 - do NOT write a new test
+    - The test from task 1 encodes the expected behavior
+    - When this test passes, it confirms the expected behavior is satisfied
+    - Run bug condition exploration test from step 1
+    - Verify `AuthenticationService.login("admin@mindaudit.com", "admin123")` returns true
+    - Verify `PasswordUtil.verifyPassword("admin123", "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9")` returns true
+    - Verify currentUser is set correctly after successful login
+    - Verify dashboard loads without errors
+    - **EXPECTED OUTCOME**: Test PASSES (confirms bug is fixed)
+    - _Requirements: 2.1, 2.2, 2.3_
+
+  - [ ] 3.6 Verify preservation tests still pass
+    - **Property 2: Preservation** - Invalid Input Rejection Behavior Unchanged
+    - **IMPORTANT**: Re-run the SAME tests from task 2 - do NOT write new tests
+    - Run preservation property tests from step 2
+    - Verify all validation error messages remain unchanged
+    - Verify invalid email format still produces "Email invalide"
+    - Verify wrong password still produces "Mot de passe incorrect"
+    - Verify non-existent user still produces "Utilisateur introuvable"
+    - Verify disabled account still produces "Le compte est désactivé"
+    - Verify empty fields still produce "Email et mot de passe requis"
+    - Verify short password still produces "Mot de passe invalide (min 6 caractères)"
+    - Verify database errors still produce appropriate error messages
+    - **EXPECTED OUTCOME**: Tests PASS (confirms no regressions)
+    - Confirm all tests still pass after fix (no regressions)
+    - _Requirements: 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7_
+
+- [ ] 4. Checkpoint - Ensure all tests pass
+  - Run all unit tests and verify they pass
+  - Run all property-based tests and verify they pass
+  - Run integration tests for full login flow
+  - Verify admin@mindaudit.com can login with password "admin123"
+  - Verify all validation checks still work correctly
+  - Verify no debug bypass code remains in the codebase
+  - Verify database has correct password hash
+  - Verify SQL scripts have been updated for future setups
+  - Ask the user if questions arise
