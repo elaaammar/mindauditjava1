@@ -16,6 +16,10 @@ public class QuestionAuditService implements IService<QuestionAudit> {
     }
 
     private void ensureBonneReponseColumnExists() {
+        if (conn == null) {
+            System.out.println("Warning: Database connection is null. Skipping table schema check.");
+            return;
+        }
         try (Statement st = conn.createStatement()) {
             st.execute("ALTER TABLE question_audit ADD COLUMN IF NOT EXISTS bonne_reponse TEXT NULL");
             st.execute("ALTER TABLE question_audit ADD COLUMN IF NOT EXISTS time_limit INT DEFAULT 0");

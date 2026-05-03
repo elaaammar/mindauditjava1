@@ -16,6 +16,10 @@ public class ReponseQuestionService implements IService<ReponseQuestion> {
     }
 
     private void createTableIfNotExists() {
+        if (conn == null) {
+            System.out.println("Warning: Database connection is null. Skipping table creation.");
+            return;
+        }
         String SQL = "CREATE TABLE IF NOT EXISTS reponse_question (" +
                 "id INT AUTO_INCREMENT PRIMARY KEY, " +
                 "question_id INT NOT NULL, " +
