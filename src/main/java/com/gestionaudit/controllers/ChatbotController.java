@@ -8,18 +8,20 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.web.WebView;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import javafx.util.Duration;
 import org.controlsfx.control.Notifications;
 import javafx.geometry.Pos;
-import netscape.javascript.JSObject;
 
+import javax.sound.sampled.*;
+import java.io.*;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.file.*;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class ChatbotController {
@@ -28,108 +30,217 @@ public class ChatbotController {
     @FXML private VBox chatHistory;
     @FXML private TextField messageField;
     @FXML private Button btnMic;
-    @FXML private WebView speechWebView;
 
     private boolean isRecording = false;
+    private TargetDataLine micLine;
+    private File audioFile;
 
-    private static final String API_KEY = "AIzaSyDcrjj2F2DGcmEnlUOplVCs3Hwl8Brc1mg";
-    private static final String API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + API_KEY;
+    private static final String API_KEY = "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";
+    private static final String CHAT_URL = "https://api.groq.com/openai/v1/chat/completions";
+    private static final String WHISPER_URL = "https://api.groq.com/openai/v1/audio/transcriptions";
+    private static final String CHAT_MODEL = "llama-3.3-70b-versatile";
+    private static final String WHISPER_MODEL = "whisper-large-v3";
 
-    private final HttpClient httpClient = HttpClient.newHttpClient();
+    private static final HttpClient httpClient = HttpClient.newBuilder()
+            .version(HttpClient.Version.HTTP_1_1)
+            .followRedirects(HttpClient.Redirect.NORMAL)
+            .connectTimeout(java.time.Duration.ofSeconds(15))
+            .build();
 
     @FXML
     public void initialize() {
-        setupSpeechRecognition();
+        // nothing to setup — no WebView needed
     }
 
-    private void setupSpeechRecognition() {
-        speechWebView.getEngine().getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
-                JSObject window = (JSObject) speechWebView.getEngine().executeScript("window");
-                window.setMember("javaApp", new SpeechBridge());
-            }
-        });
-
-        // Load a minimal HTML that uses the Web Speech API
-        String html = "<html><body>" +
-                "<script>" +
-                "  var recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();" +
-                "  recognition.lang = 'fr-FR';" +
-                "  recognition.onresult = function(event) { " +
-                "    var transcript = event.results[0][0].transcript; " +
-                "    javaApp.onSpeechReady(transcript); " +
-                "  };" +
-                "  recognition.onend = function() { javaApp.onSpeechEnd(); };" +
-                "  function startRec() { recognition.start(); }" +
-                "  function stopRec() { recognition.stop(); }" +
-                "</script></body></html>";
-        speechWebView.getEngine().loadContent(html);
-    }
-
-    public class SpeechBridge {
-        public void onSpeechReady(String text) {
-            javafx.application.Platform.runLater(() -> {
-                messageField.setText(text);
-                handleSend(); // Auto-send the dictation
-            });
-        }
-        public void onSpeechEnd() {
-            javafx.application.Platform.runLater(() -> {
-                isRecording = false;
-                btnMic.setText("🎤");
-                btnMic.setStyle("-fx-font-size: 18px;");
-            });
-        }
-    }
+    // ─── Recording ────────────────────────────────────────────────────────────
 
     @FXML
     private void toggleRecording() {
         if (!isRecording) {
-            speechWebView.getEngine().executeScript("startRec()");
-            isRecording = true;
-            btnMic.setText("🛑");
-            btnMic.setStyle("-fx-font-size: 18px; -fx-text-fill: #ef4444; -fx-border-color: #ef4444;");
+            startRecording();
         } else {
-            speechWebView.getEngine().executeScript("stopRec()");
+            stopRecordingAndTranscribe();
         }
     }
 
+    private void startRecording() {
+        try {
+            AudioFormat format = new AudioFormat(16000f, 16, 1, true, false);
+            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
+
+            TargetDataLine selectedLine = null;
+            for (Mixer.Info mixerInfo : AudioSystem.getMixerInfo()) {
+                Mixer mixer = AudioSystem.getMixer(mixerInfo);
+                String name = mixerInfo.getName().toLowerCase();
+                if (name.contains("stereo mix") || name.contains("what u hear") || name.contains("loopback")) {
+                    continue;
+                }
+                if (mixer.isLineSupported(info)) {
+                    try {
+                        selectedLine = (TargetDataLine) mixer.getLine(info);
+                        System.out.println("Using mic: " + mixerInfo.getName());
+                        break;
+                    } catch (LineUnavailableException ignored) {}
+                }
+            }
+
+            if (selectedLine == null) {
+                addMessageToChat("⚠️ Microphone non disponible sur ce système.", false);
+                return;
+            }
+
+            micLine = selectedLine;
+            micLine.open(format);
+            micLine.start();
+
+            audioFile = File.createTempFile("groq_audio_", ".wav");
+
+            isRecording = true;
+            btnMic.setText("🛑");
+            btnMic.setStyle("-fx-font-size: 18px; -fx-text-fill: #ef4444; -fx-border-color: #ef4444;");
+
+            CompletableFuture.runAsync(() -> {
+                try (AudioInputStream ais = new AudioInputStream(micLine)) {
+                    AudioSystem.write(ais, AudioFileFormat.Type.WAVE, audioFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            addMessageToChat("⚠️ Erreur lors de l'ouverture du microphone : " + e.getMessage(), false);
+        }
+    }
+
+    private void stopRecordingAndTranscribe() {
+        if (micLine != null) {
+            micLine.stop();
+            micLine.close();
+        }
+
+        isRecording = false;
+        btnMic.setText("🎤");
+        btnMic.setStyle("-fx-font-size: 18px;");
+        addMessageToChat("🎙️ Transcription en cours...", false);
+
+        CompletableFuture.supplyAsync(() -> transcribeWithWhisper(audioFile))
+                .thenAccept(transcript -> {
+                    javafx.application.Platform.runLater(() -> {
+                        // Remove the "transcription en cours" message
+                        if (!chatHistory.getChildren().isEmpty()) {
+                            chatHistory.getChildren().remove(chatHistory.getChildren().size() - 1);
+                        }
+                        if (transcript == null || transcript.isBlank()) {
+                            addMessageToChat("⚠️ Aucun texte détecté dans l'enregistrement.", false);
+                            return;
+                        }
+                        // Put transcript in field and send
+                        messageField.setText(transcript);
+                        handleSend();
+                    });
+                })
+                .exceptionally(ex -> {
+                    javafx.application.Platform.runLater(() ->
+                            addMessageToChat("⚠️ Erreur de transcription : " + ex.getMessage(), false));
+                    ex.printStackTrace();
+                    return null;
+                });
+    }
+
+    // ─── Whisper transcription ─────────────────────────────────────────────────
+
+    private String transcribeWithWhisper(File wavFile) {
+        try {
+            String boundary = UUID.randomUUID().toString().replace("-", "");
+            byte[] fileBytes = Files.readAllBytes(wavFile.toPath());
+
+            // Build multipart/form-data body manually
+            ByteArrayOutputStream body = new ByteArrayOutputStream();
+            PrintWriter writer = new PrintWriter(new OutputStreamWriter(body, "UTF-8"), true);
+
+            // -- model field
+            writer.append("--").append(boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"model\"").append("\r\n\r\n");
+            writer.append(WHISPER_MODEL).append("\r\n");
+            writer.flush();
+
+            // -- language field
+            writer.append("--").append(boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"language\"").append("\r\n\r\n");
+            writer.append("fr").append("\r\n");
+            writer.flush();
+
+            // -- file field
+            writer.append("--").append(boundary).append("\r\n");
+            writer.append("Content-Disposition: form-data; name=\"file\"; filename=\"audio.wav\"").append("\r\n");
+            writer.append("Content-Type: audio/wav").append("\r\n\r\n");
+            writer.flush();
+            body.write(fileBytes);
+
+            writer.append("\r\n");
+            writer.append("--").append(boundary).append("--").append("\r\n");
+            writer.flush();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(WHISPER_URL))
+                    .header("Authorization", "Bearer " + API_KEY)
+                    .header("Content-Type", "multipart/form-data; boundary=" + boundary)
+                    .POST(HttpRequest.BodyPublishers.ofByteArray(body.toByteArray()))
+                    .build();
+
+            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200) {
+                JSONObject json = new JSONObject(response.body());
+                return json.getString("text").trim();
+            } else {
+                System.err.println("Whisper error " + response.statusCode() + ": " + response.body());
+                return null;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // ─── Chat send ─────────────────────────────────────────────────────────────
+
     @FXML
     private void handleSend() {
-        String msg = messageField.getText();
+        String msg = messageField.getText().trim();
         if (msg.isEmpty()) return;
 
         javafx.stage.Window win = messageField.getScene() != null ? messageField.getScene().getWindow() : null;
-        if (BadWordEnforcement.blockIfViolating(msg, win)) {
-            return;
-        }
+        if (BadWordEnforcement.blockIfViolating(msg, win)) return;
 
-        addMessageToChat(msg, true); // true = user (right)
+        addMessageToChat(msg, true);
         messageField.clear();
 
-        callGeminiAPI(msg).thenAccept(reply -> {
+        callGroqAPI(msg).thenAccept(reply -> {
             javafx.application.Platform.runLater(() -> {
-                addMessageToChat(reply, false); // false = AI (left)
-                
+                addMessageToChat(reply, false);
                 Notifications.create()
-                    .title("IA Gestion Audit")
-                    .text("Nouvelle réponse reçue de l'assistant.")
-                    .position(Pos.TOP_RIGHT)
-                    .hideAfter(Duration.seconds(3))
-                    .showInformation();
+                        .title("IA Gestion Audit")
+                        .text("Nouvelle réponse reçue de l'assistant.")
+                        .position(Pos.TOP_RIGHT)
+                        .hideAfter(Duration.seconds(3))
+                        .showInformation();
             });
         }).exceptionally(ex -> {
-            javafx.application.Platform.runLater(() -> {
-                addMessageToChat("Désolé, j'ai rencontré un problème technique.", false);
-            });
+            javafx.application.Platform.runLater(() ->
+                    addMessageToChat("Désolé, j'ai rencontré un problème technique.", false));
             ex.printStackTrace();
             return null;
         });
     }
 
+    // ─── UI helpers ────────────────────────────────────────────────────────────
+
     private void addMessageToChat(String content, boolean isUser) {
         HBox row = new HBox();
-        row.setAlignment(isUser ? javafx.geometry.Pos.CENTER_RIGHT : javafx.geometry.Pos.CENTER_LEFT);
+        row.setAlignment(isUser ? Pos.CENTER_RIGHT : Pos.CENTER_LEFT);
 
         VBox bubble = new VBox(5);
         bubble.getStyleClass().add(isUser ? "chat-bubble-client" : "chat-bubble-admin");
@@ -138,51 +249,59 @@ public class ChatbotController {
         Label textLabel = new Label(content);
         textLabel.setWrapText(true);
         textLabel.getStyleClass().add("chat-bubble-text");
-        if (isUser) textLabel.setStyle("-fx-text-fill: white;");
+        textLabel.setStyle(isUser ? "-fx-text-fill: white;" : "-fx-text-fill: black;");
 
         bubble.getChildren().add(textLabel);
         row.getChildren().add(bubble);
         chatHistory.getChildren().add(row);
 
-        // Auto-scroll
         javafx.application.Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 
-    private CompletableFuture<String> callGeminiAPI(String prompt) {
-        JSONObject jsonRequest = new JSONObject();
-        JSONArray contents = new JSONArray();
-        JSONObject entry = new JSONObject();
-        JSONArray partsArr = new JSONArray();
-        JSONObject textPart = new JSONObject();
-        
-        textPart.put("text", prompt);
-        partsArr.put(textPart);
-        entry.put("parts", partsArr);
-        contents.put(entry);
-        jsonRequest.put("contents", contents);
+    // ─── Groq chat API ─────────────────────────────────────────────────────────
+
+    private CompletableFuture<String> callGroqAPI(String prompt) {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("model", CHAT_MODEL);
+
+        JSONArray messages = new JSONArray();
+
+        JSONObject systemMsg = new JSONObject();
+        systemMsg.put("role", "system");
+        systemMsg.put("content", "Tu es un assistant intelligent pour l'application Gestion Audit. Réponds en français de manière concise et professionnelle.");
+        messages.put(systemMsg);
+
+        JSONObject userMsg = new JSONObject();
+        userMsg.put("role", "user");
+        userMsg.put("content", prompt);
+        messages.put(userMsg);
+
+        requestBody.put("messages", messages);
+        requestBody.put("temperature", 0.7);
+        requestBody.put("max_tokens", 1024);
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(API_URL))
+                .uri(URI.create(CHAT_URL))
                 .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(jsonRequest.toString()))
+                .header("Authorization", "Bearer " + API_KEY)
+                .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
                 .build();
 
         return httpClient.sendAsync(request, HttpResponse.BodyHandlers.ofString())
                 .thenApply(response -> {
                     if (response.statusCode() == 200) {
-                        JSONObject jsonResponse = new JSONObject(response.body());
                         try {
-                            return jsonResponse.getJSONArray("candidates")
+                            return new JSONObject(response.body())
+                                    .getJSONArray("choices")
                                     .getJSONObject(0)
-                                    .getJSONObject("content")
-                                    .getJSONArray("parts")
-                                    .getJSONObject(0)
-                                    .getString("text");
+                                    .getJSONObject("message")
+                                    .getString("content")
+                                    .trim();
                         } catch (Exception e) {
-                            return "Désolé, je n'ai pas pu traiter votre demande.";
+                            return "Désolé, je n'ai pas pu traiter la réponse.";
                         }
                     } else {
-                        return "Erreur API (" + response.statusCode() + ")";
+                        return "Erreur API Groq (" + response.statusCode() + "): " + response.body();
                     }
                 });
     }

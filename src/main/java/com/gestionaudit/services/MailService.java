@@ -30,7 +30,7 @@ public class MailService {
             message.setSubject(subject);
             message.setText(body);
 
-            
+
             Transport.send(message);
             System.out.println("Email sent successfully");
         } catch (MessagingException e) {
