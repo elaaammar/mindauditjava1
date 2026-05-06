@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: #f0f2f5;" 
+            xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mindjavafx.controller.AdminDashboardHomeController">
+
+    <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: #f0f2f5;">
+
+        <!-- WELCOME HEADER -->
+        <HBox alignment="CENTER_LEFT" spacing="8">
+            <VBox spacing="2">
+                <Label text="Bienvenue," style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label fx:id="welcomeNameLabel" text="Admin" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #3498db;"/>
+            </VBox>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Button text="Actualiser" onAction="#refreshData"
+                    style="-fx-background-color: white; -fx-text-fill: #3498db; -fx-border-color: #3498db; 
+                           -fx-border-radius: 20; -fx-background-radius: 20; -fx-padding: 8 20; -fx-font-weight: bold; -fx-cursor: hand;"/>
+        </HBox>
+
+        <!-- STAT CARDS (5 cards now) -->
+        <HBox spacing="15">
+
+            <!-- Card 1: Score Global -->
+            <VBox spacing="8" HBox.hgrow="ALWAYS" prefHeight="130"
+                  style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2);
+                         -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                <Label text="Score Global" style="-fx-font-size: 11; -fx-text-fill: rgba(255,255,255,0.8); -fx-font-weight: bold;"/>
+                <Label fx:id="lblScoreGlobal" text="-- /100" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label fx:id="lblScoreSubtitle" text="Aucun audit" style="-fx-font-size: 10; -fx-text-fill: rgba(255,255,255,0.7);"/>
+            </VBox>
+
+            <!-- Card 2: Audits -->
+            <VBox spacing="8" HBox.hgrow="ALWAYS" prefHeight="130"
+                  style="-fx-background-color: linear-gradient(to bottom right, #f953c6, #b91d73);
+                         -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                <Label text="Total Audits" style="-fx-font-size: 11; -fx-text-fill: rgba(255,255,255,0.8); -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalReports" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label fx:id="lblAuditsMonth" text="ce mois-ci" style="-fx-font-size: 10; -fx-text-fill: rgba(255,255,255,0.7);"/>
+            </VBox>
+
+            <!-- Card 3: RECOMMANDATIONS (NEW) -->
+            <VBox spacing="8" HBox.hgrow="ALWAYS" prefHeight="130"
+                  style="-fx-background-color: linear-gradient(to bottom right, #ff9a9e, #fecfef);
+                         -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                <Label text="Recommandations" style="-fx-font-size: 11; -fx-text-fill: #2c3e50; -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalRecos" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <Label fx:id="lblResolutionRate" text="0% résolues" style="-fx-font-size: 10; -fx-text-fill: #2c3e50;"/>
+            </VBox>
+
+            <!-- Card 4: Rapports PDF -->
+            <VBox spacing="8" HBox.hgrow="ALWAYS" prefHeight="130"
+                  style="-fx-background-color: linear-gradient(to bottom right, #00c6ff, #0072ff);
+                         -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                <Label text="Rapports PDF" style="-fx-font-size: 11; -fx-text-fill: rgba(255,255,255,0.8); -fx-font-weight: bold;"/>
+                <Label fx:id="lblTotalUsers" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label text="Disponibles" style="-fx-font-size: 10; -fx-text-fill: rgba(255,255,255,0.7);"/>
+            </VBox>
+
+            <!-- Card 5: Notifications -->
+            <VBox spacing="8" HBox.hgrow="ALWAYS" prefHeight="130"
+                  style="-fx-background-color: linear-gradient(to bottom right, #f7971e, #e74c3c);
+                         -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 4);">
+                <Label text="Notifications" style="-fx-font-size: 11; -fx-text-fill: rgba(255,255,255,0.8); -fx-font-weight: bold;"/>
+                <Label fx:id="lblNotifications" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                <Label text="Messages non lus" style="-fx-font-size: 10; -fx-text-fill: rgba(255,255,255,0.7);"/>
+            </VBox>
+
+        </HBox>
+
+        <!-- CHARTS SECTION -->
+        <GridPane hgap="20" vgap="20">
+            <columnConstraints>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="60"/>
+                <ColumnConstraints hgrow="ALWAYS" percentWidth="40"/>
+            </columnConstraints>
+
+            <!-- Line Chart -->
+            <VBox spacing="10" GridPane.columnIndex="0"
+                  style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+                <Label text="Évolution des Scores" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <LineChart fx:id="chartTendance" prefHeight="250" animated="true" legendVisible="false">
+                    <xAxis><CategoryAxis side="BOTTOM"/></xAxis>
+                    <yAxis><NumberAxis side="LEFT" lowerBound="0" upperBound="100"/></yAxis>
+                </LineChart>
+            </VBox>
+
+            <!-- Pie Chart: Répartition par Statut -->
+            <VBox spacing="10" GridPane.columnIndex="1"
+                  style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+                <Label text="Statut des Rapports" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <PieChart fx:id="chartStatus" prefHeight="250" animated="true" legendSide="BOTTOM"/>
+            </VBox>
+
+            <!-- Bar Chart: Priorités -->
+            <VBox spacing="10" GridPane.rowIndex="1" GridPane.columnSpan="2"
+                  style="-fx-background-color: white; -fx-background-radius: 15; -fx-padding: 20; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+                <Label text="Priorités des Recommandations" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                <BarChart fx:id="chartPriorities" prefHeight="250" animated="true" legendVisible="false">
+                    <xAxis><CategoryAxis side="BOTTOM" label="Priorité"/></xAxis>
+                    <yAxis><NumberAxis side="LEFT" label="Nombre"/></yAxis>
+                </BarChart>
+            </VBox>
+        </GridPane>
+
+        <!-- USER STATISTICS SECTION -->
+        <VBox spacing="25" style="-fx-padding: 10 0;">
+            <HBox alignment="CENTER_LEFT" spacing="10">
+                <Label text="Stats" style="-fx-font-size: 24;"/>
+                <Label text="Vue d'ensemble des Utilisateurs" style="-fx-font-size: 20; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            </HBox>
+            
+            <GridPane hgap="25" vgap="25">
+                <!-- User Cards -->
+                <HBox spacing="20" GridPane.columnIndex="0" GridPane.columnSpan="2">
+                    <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS" prefHeight="150"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);">
+                        <Label text="Users" style="-fx-font-size: 24; -fx-text-fill: #3498db;"/>
+                        <Label text="Total Utilisateurs" style="-fx-text-fill: #95a5af; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblTotalUsersReal" text="0" style="-fx-text-fill: #2c3e50; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS" prefHeight="150"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);">
+                        <Label text="OK" style="-fx-font-size: 24; -fx-text-fill: #27ae60;"/>
+                        <Label text="Utilisateurs Actifs" style="-fx-text-fill: #95a5af; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblActiveUsers" text="0" style="-fx-text-fill: #27ae60; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                    </VBox>
+                    <VBox spacing="10" alignment="CENTER" HBox.hgrow="ALWAYS" prefHeight="150"
+                          style="-fx-background-color: white; -fx-background-radius: 18; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);">
+                        <Label text="KO" style="-fx-font-size: 24; -fx-text-fill: #e74c3c;"/>
+                        <Label text="Utilisateurs Inactifs" style="-fx-text-fill: #95a5af; -fx-font-size: 14; -fx-font-weight: bold;"/>
+                        <Label fx:id="lblInactiveUsers" text="0" style="-fx-text-fill: #e74c3c; -fx-font-size: 36; -fx-font-weight: bold;"/>
+                    </VBox>
+                </HBox>
+
+                <!-- Role Distribution Pie Chart -->
+                <VBox spacing="15" GridPane.rowIndex="1" GridPane.columnIndex="0" prefWidth="500"
+                      style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Roles" style="-fx-font-size: 18;"/>
+                        <Label text="Répartition des Rôles" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    </HBox>
+                    <PieChart fx:id="chartUserRoles" prefHeight="300" animated="true" legendSide="BOTTOM"/>
+                </VBox>
+
+                <!-- Score Averages Bars -->
+                <VBox spacing="15" GridPane.rowIndex="1" GridPane.columnIndex="1" prefWidth="500"
+                      style="-fx-background-color: white; -fx-background-radius: 20; -fx-padding: 25; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 15, 0, 0, 5);">
+                    <HBox alignment="CENTER_LEFT" spacing="10">
+                        <Label text="Perf" style="-fx-font-size: 18;"/>
+                        <Label text="Performance Globale" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    </HBox>
+                    <VBox spacing="25" style="-fx-padding: 20 0;">
+                        <VBox spacing="10">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Securite" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="securityAvgLabel" text="0/100" style="-fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <ProgressBar fx:id="securityAvgProgress" progress="0" maxWidth="Infinity" prefHeight="12" style="-fx-accent: #27ae60;"/>
+                        </VBox>
+                        <VBox spacing="10">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Conformite" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="complianceAvgLabel" text="0/100" style="-fx-text-fill: #f39c12; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <ProgressBar fx:id="complianceAvgProgress" progress="0" maxWidth="Infinity" prefHeight="12" style="-fx-accent: #f39c12;"/>
+                        </VBox>
+                        <VBox spacing="10">
+                            <HBox alignment="CENTER_LEFT">
+                                <Label text="Performance" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                                <Region HBox.hgrow="ALWAYS"/>
+                                <Label fx:id="performanceAvgLabel" text="0/100" style="-fx-text-fill: #e67e22; -fx-font-weight: bold;"/>
+                            </HBox>
+                            <ProgressBar fx:id="performanceAvgProgress" progress="0" maxWidth="Infinity" prefHeight="12" style="-fx-accent: #e67e22;"/>
+                        </VBox>
+                    </VBox>
+                </VBox>
+            </GridPane>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

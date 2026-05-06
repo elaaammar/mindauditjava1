@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.gestion.controller.EntrepriseController"
+            fitToWidth="true">
+    <VBox spacing="20" style="-fx-padding: 25; -fx-background-color: #f4f7f6;">
+
+        <!-- Header -->
+        <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+            <Label text="🏢 Gestion des Entreprises" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Ajouter, modifier, valider et exporter vos entreprises." style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;"/>
+        </VBox>
+
+        <!-- Filters Bar -->
+        <HBox spacing="10" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15; -fx-background-radius: 8;">
+            <TextField fx:id="txtSearch" promptText="🔍 Rechercher par nom, matricule..." prefWidth="250"
+                       style="-fx-background-radius: 6; -fx-border-color: #ddd; -fx-border-radius: 6; -fx-padding: 8;"/>
+            <ComboBox fx:id="cbFilterStatut" promptText="Statut" prefWidth="120"/>
+            <ComboBox fx:id="cbFilterSecteur" promptText="Secteur" prefWidth="160"/>
+            <ComboBox fx:id="cbFilterTaille" promptText="Taille" prefWidth="100"/>
+            <Button text="🔄 Réinitialiser" onAction="#handleResetFilters"
+                    style="-fx-background-color: #95a5a6; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 8 14;"/>
+        </HBox>
+
+        <!-- Form Card -->
+        <VBox spacing="12" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <Label text="➕ Ajouter / Modifier une Entreprise" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+            <GridPane hgap="15" vgap="10">
+                <Label text="Nom *" GridPane.rowIndex="0" GridPane.columnIndex="0" style="-fx-text-fill:#555;"/>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="1">
+                    <TextField fx:id="txtNom" promptText="Nom de l'entreprise" prefWidth="220" style="-fx-background-radius:5; -fx-border-color:#ddd; -fx-border-radius:5; -fx-padding:7;"/>
+                    <Label fx:id="errNom" style="-fx-text-fill:#e74c3c; -fx-font-size:11;"/>
+                </VBox>
+
+                <Label text="Matricule *" GridPane.rowIndex="0" GridPane.columnIndex="2" style="-fx-text-fill:#555;"/>
+                <VBox GridPane.rowIndex="0" GridPane.columnIndex="3">
+                    <TextField fx:id="txtMatricule" promptText="ex: 1234567A" prefWidth="180" style="-fx-background-radius:5; -fx-border-color:#ddd; -fx-border-radius:5; -fx-padding:7;"/>
+                    <Label fx:id="errMatricule" style="-fx-text-fill:#e74c3c; -fx-font-size:11;"/>
+                </VBox>
+
+                <Label text="Secteur" GridPane.rowIndex="1" GridPane.columnIndex="0" style="-fx-text-fill:#555;"/>
+                <ComboBox fx:id="cbSecteur" promptText="Secteur d'activité" prefWidth="220" GridPane.rowIndex="1" GridPane.columnIndex="1"/>
+
+                <Label text="Taille" GridPane.rowIndex="1" GridPane.columnIndex="2" style="-fx-text-fill:#555;"/>
+                <ComboBox fx:id="cbTaille" promptText="Taille" prefWidth="180" GridPane.rowIndex="1" GridPane.columnIndex="3"/>
+
+                <Label text="Email *" GridPane.rowIndex="2" GridPane.columnIndex="0" style="-fx-text-fill:#555;"/>
+                <VBox GridPane.rowIndex="2" GridPane.columnIndex="1">
+                    <TextField fx:id="txtEmail" promptText="email@exemple.com" prefWidth="220" style="-fx-background-radius:5; -fx-border-color:#ddd; -fx-border-radius:5; -fx-padding:7;"/>
+                    <Label fx:id="errEmail" style="-fx-text-fill:#e74c3c; -fx-font-size:11;"/>
+                </VBox>
+
+                <Label text="Téléphone *" GridPane.rowIndex="2" GridPane.columnIndex="2" style="-fx-text-fill:#555;"/>
+                <VBox GridPane.rowIndex="2" GridPane.columnIndex="3">
+                    <TextField fx:id="txtTelephone" promptText="ex: 71234567" prefWidth="180" style="-fx-background-radius:5; -fx-border-color:#ddd; -fx-border-radius:5; -fx-padding:7;"/>
+                    <Label fx:id="errTelephone" style="-fx-text-fill:#e74c3c; -fx-font-size:11;"/>
+                </VBox>
+
+                <Label text="Pays" GridPane.rowIndex="3" GridPane.columnIndex="0" style="-fx-text-fill:#555;"/>
+                <TextField fx:id="txtPays" promptText="Pays" prefWidth="220" GridPane.rowIndex="3" GridPane.columnIndex="1"
+                           style="-fx-background-radius:5; -fx-border-color:#ddd; -fx-border-radius:5; -fx-padding:7;"/>
+
+                <Label text="Adresse" GridPane.rowIndex="3" GridPane.columnIndex="2" style="-fx-text-fill:#555;"/>
+                <TextField fx:id="txtAdresse" promptText="Adresse complète" prefWidth="180" GridPane.rowIndex="3" GridPane.columnIndex="3"
+                           style="-fx-background-radius:5; -fx-border-color:#ddd; -fx-border-radius:5; -fx-padding:7;"/>
+
+                <Label text="Date création" GridPane.rowIndex="4" GridPane.columnIndex="0" style="-fx-text-fill:#555;"/>
+                <DatePicker fx:id="dpDateCreation" prefWidth="220" GridPane.rowIndex="4" GridPane.columnIndex="1"/>
+            </GridPane>
+
+            <!-- Action Buttons -->
+            <HBox spacing="10" style="-fx-padding: 10 0 0 0;">
+                <Button text="💾 Enregistrer" onAction="#handleSave"
+                        style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20; -fx-font-weight: bold;"/>
+                <Button text="✅ Valider" onAction="#handleValidate"
+                        style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="❌ Rejeter" onAction="#handleInvalidate"
+                        style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="🗑️ Supprimer" onAction="#handleDelete"
+                        style="-fx-background-color: #c0392b; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="📄 Export PDF" onAction="#handleExportPdf"
+                        style="-fx-background-color: #8e44ad; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="📷 QR Code" onAction="#handleGenerateQR"
+                        style="-fx-background-color: #16a085; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="🗺️ Carte" onAction="#handleOpenMap"
+                        style="-fx-background-color: #2980b9; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="🧠 IA Analyse" onAction="#handleAssistantIA"
+                        style="-fx-background-color: #6c3483; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+                <Button text="🔄 Effacer" onAction="#clearFields"
+                        style="-fx-background-color: #7f8c8d; -fx-text-fill: white; -fx-background-radius: 6; -fx-cursor: hand; -fx-padding: 9 20;"/>
+
+                <HBox fx:id="adminControls" spacing="8"/>
+            </HBox>
+        </VBox>
+
+        <!-- Table -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 8, 0, 0, 2);">
+            <Label text="📋 Liste des Entreprises" style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+            <TableView fx:id="tableEntreprises" prefHeight="300">
+                <columns>
+                    <TableColumn fx:id="colNom" text="Nom" prefWidth="180"/>
+                    <TableColumn fx:id="colMatricule" text="Matricule Fiscal" prefWidth="140"/>
+                    <TableColumn fx:id="colSecteur" text="Secteur" prefWidth="160"/>
+                    <TableColumn fx:id="colStatut" text="Statut" prefWidth="100"/>
+                    <TableColumn fx:id="colCompliance" text="Conformité %" prefWidth="100"/>
+                </columns>
+            </TableView>
+            <!-- Pagination -->
+            <HBox spacing="10" alignment="CENTER">
+                <Button fx:id="btnPrev" text="◀ Précédent" onAction="#handlePrevPage"
+                        style="-fx-background-color: #bdc3c7; -fx-text-fill: #2c3e50; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 6 14;"/>
+                <Label fx:id="lblPagination" text="Page 1 / 1" style="-fx-font-weight: bold; -fx-text-fill: #555;"/>
+                <Button fx:id="btnNext" text="Suivant ▶" onAction="#handleNextPage"
+                        style="-fx-background-color: #bdc3c7; -fx-text-fill: #2c3e50; -fx-background-radius: 5; -fx-cursor: hand; -fx-padding: 6 14;"/>
+            </HBox>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

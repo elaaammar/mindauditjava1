@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.shape.Circle?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mindjavafx.controller.ProfessionalDashboardController"
+            stylesheets="@../css/styles.css">
+
+    <!-- HEADER (TOP) -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: #2c3e50; -fx-padding: 15px 30px;">
+            <!-- Logo/Title -->
+            <Label text="MindAudit" style="-fx-text-fill: white; -fx-font-size: 20px; -fx-font-weight: bold;"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- Search Bar -->
+            <TextField fx:id="searchField" promptText="🔍 Rechercher..." 
+                      style="-fx-background-color: #34495e; -fx-text-fill: white; -fx-prompt-text-fill: #95a5a6; -fx-background-radius: 20px; -fx-padding: 8px 15px;"
+                      prefWidth="300"/>
+            
+            <Region HBox.hgrow="ALWAYS"/>
+            
+            <!-- User Info -->
+            <HBox alignment="CENTER" spacing="15">
+                <!-- Notification Bell -->
+                <StackPane>
+                    <Button fx:id="notificationButton" text="🔔" onAction="#showNotificationDropdown"
+                           style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 20px; -fx-cursor: hand;"/>
+                    <Label fx:id="notificationBadge" text="3" 
+                          style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10px; -fx-padding: 2px 6px; -fx-font-size: 10px; -fx-font-weight: bold;"
+                          translateX="10" translateY="-8" visible="true"/>
+                </StackPane>
+                
+                <!-- User Profile -->
+                <HBox alignment="CENTER" spacing="10">
+                    <Circle fx:id="profileImage" radius="20" fill="#3498db" style="-fx-stroke: white; -fx-stroke-width: 2;"/>
+                    <VBox spacing="2">
+                        <Label fx:id="userNameLabel" text="Utilisateur" style="-fx-text-fill: white; -fx-font-weight: bold;"/>
+                        <Label text="User" style="-fx-text-fill: #95a5a6; -fx-font-size: 11px;"/>
+                    </VBox>
+                </HBox>
+                
+                <!-- Logout Button -->
+                <Button fx:id="logoutButton" text="Déconnexion" onAction="#handleLogout"
+                       style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 5px; -fx-padding: 8px 15px; -fx-cursor: hand;"/>
+            </HBox>
+        </HBox>
+    </top>
+
+    <!-- SIDEBAR MODERNE -->
+    <left>
+        <VBox spacing="8" style="-fx-background-color: #2c3e50; -fx-padding: 25 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 2, 0);" prefWidth="240">
+            <Label text="NAVIGATION" style="-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: #95a5a6; -fx-padding: 10 25; -fx-letter-spacing: 1;"/>
+            
+            <Button fx:id="homeButton" text="📊 Dashboard" onAction="#showHome" maxWidth="Infinity" 
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand; -fx-font-weight: bold;"/>
+            
+            <Button fx:id="auditsButton" text="📝 Mes Audits" onAction="#showMyAudits" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <Button fx:id="analyticsButton" text="📈 Analytics" onAction="#showAnalytics" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <Button fx:id="reportsButton" text="📄 Rapports" onAction="#showReports" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <Button fx:id="notificationsButton" text="🔔 Notifications" onAction="#showNotifications" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <!-- Separator -->
+            <VBox style="-fx-padding: 20 0;"/>
+            
+            <Label text="SYSTÈME" style="-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: #95a5a6; -fx-padding: 10 25; -fx-letter-spacing: 1;"/>
+            
+            <Button fx:id="settingsButton" text="⚙️ Paramètres" onAction="#showSettings" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <Region VBox.vgrow="ALWAYS"/>
+            <Label text="v1.0.0" style="-fx-text-fill: #7f8c8d; -fx-font-size: 10px; -fx-padding: 10 25;"/>
+        </VBox>
+    </left>
+
+    <!-- CONTENT AREA (CENTER) -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;">
+            <!-- Content will be loaded dynamically here -->
+        </StackPane>
+    </center>
+
+</BorderPane>

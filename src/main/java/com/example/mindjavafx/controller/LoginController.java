@@ -176,20 +176,10 @@ public class LoginController {
     private void triggerLoginNotifications(User user) {
         if (user == null) return;
         
-        System.out.println("[DEBUG Login] Déclenchement notification pour: " + user.getNom() + " (ID: " + user.getId() + ")");
+        System.out.println("[DEBUG Login] Déclenchement alerte email pour: " + user.getNom());
         
-        // 1. Créer une notification en base de données
-        com.example.mindjavafx.model.Notification notification = new com.example.mindjavafx.model.Notification(
-            user.getId(),
-            "Alerte de Connexion",
-            "Vous venez de vous connecter au système.",
-            "alert"
-        );
-        int notifId = notificationService.createNotification(notification);
-        System.out.println("[DEBUG Login] Notification ID créé: " + notifId);
-        
-        // 2. Envoyer un email d'alerte
-        System.out.println("[DEBUG] Déclenchement de l'alerte email pour: " + user.getNom());
+        // On ne crée plus de notification en base de données pour éviter d'encombrer l'interface
+        // Seule l'alerte email est conservée comme demandé
         emailService.sendLoginAlertAsync(user.getNom(), user.getEmail());
     }
 
@@ -200,29 +190,30 @@ public class LoginController {
             // Route based on user role
             if ("User".equalsIgnoreCase(userRole)) {
                 // Load professional user dashboard
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/professional-dashboard.fxml"));
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/user-dashboard.fxml"));
                 Parent root = loader.load();
 
-                ProfessionalDashboardController controller = loader.getController();
+                UserDashboardController controller = loader.getController();
                 controller.setAuthService(authService);
                 controller.setCurrentUser(authService.getCurrentUser());
 
                 Stage stage = (Stage) loginButton.getScene().getWindow();
                 stage.setScene(new Scene(root, 1600, 900));
-                stage.setTitle("MindAudit - Dashboard Utilisateur");
+                stage.setTitle("MindAudit - Espace Entreprise [v2]");
                 stage.setResizable(true);
-                stage.setMaximized(true);  // Maximiser la fenêtre
-                stage.setAlwaysOnTop(true);  // Forcer au premier plan
+                stage.setMaximized(true);
+                stage.setAlwaysOnTop(true);
                 stage.show();
-                stage.toFront();  // Mettre la fenêtre au premier plan
-                stage.requestFocus();  // Donner le focus à la fenêtre
-                // Désactiver "always on top" après 1 seconde
+                stage.toFront();
+                stage.requestFocus();
+                
                 new Thread(() -> {
                     try {
                         Thread.sleep(1000);
                         javafx.application.Platform.runLater(() -> stage.setAlwaysOnTop(false));
                     } catch (Exception e) {}
                 }).start();
+                
             } else {
                 // Load admin dashboard
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/dashboard.fxml"));
@@ -233,14 +224,14 @@ public class LoginController {
 
                 Stage stage = (Stage) loginButton.getScene().getWindow();
                 stage.setScene(new Scene(root, 1600, 900));
-                stage.setTitle("MindAudit - Tableau de Bord Admin");
+                stage.setTitle("MindAudit - Tableau de Bord Admin [v2]");
                 stage.setResizable(true);
-                stage.setMaximized(true);  // Maximiser la fenêtre
-                stage.setAlwaysOnTop(true);  // Forcer au premier plan
+                stage.setMaximized(true);
+                stage.setAlwaysOnTop(true);
                 stage.show();
-                stage.toFront();  // Mettre la fenêtre au premier plan
-                stage.requestFocus();  // Donner le focus à la fenêtre
-                // Désactiver "always on top" après 1 seconde
+                stage.toFront();
+                stage.requestFocus();
+                
                 new Thread(() -> {
                     try {
                         Thread.sleep(1000);

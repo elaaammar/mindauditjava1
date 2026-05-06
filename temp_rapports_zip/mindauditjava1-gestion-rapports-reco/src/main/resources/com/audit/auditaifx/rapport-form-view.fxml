@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.audit.auditaifx.controller.RapportFormController"
+      spacing="12" style="-fx-background-color: #f8fafc; -fx-padding: 25;"
+      stylesheets="@audit.css">
+
+    <!-- TITRE FORMULAIRE -->
+    <Label text=" Rapport d'Audit"
+           style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    <Separator/>
+
+    <!-- TITRE -->
+    <VBox spacing="3">
+        <Label text="Titre *" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtTitre" promptText="Ex: Audit Sécurité SI 2024"/>
+        <Label fx:id="lblErreurTitre" style="-fx-text-fill: #e74c3c; -fx-font-size: 11;"/>
+    </VBox>
+
+    <!-- AUDITEUR -->
+    <VBox spacing="3">
+        <Label text="Auditeur *" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtAuditeur" promptText="Nom et prénom de l'auditeur"/>
+        <Label fx:id="lblErreurAuditeur" style="-fx-text-fill: #e74c3c; -fx-font-size: 11;"/>
+    </VBox>
+
+    <!-- ENTITE -->
+    <VBox spacing="3">
+        <Label text="Entité Auditée *" style="-fx-font-weight: bold;"/>
+        <TextField fx:id="txtEntite" promptText="Ex: DSI, Finance, RH..."/>
+        <Label fx:id="lblErreurEntite" style="-fx-text-fill: #e74c3c; -fx-font-size: 11;"/>
+    </VBox>
+
+    <!-- STATUT -->
+    <VBox spacing="3">
+        <Label text="Statut" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="cmbStatut" prefWidth="200"/>
+    </VBox>
+
+    <!-- DESCRIPTION -->
+    <VBox spacing="3">
+        <Label text="Description" style="-fx-font-weight: bold;"/>
+        <TextArea fx:id="txtDescription"
+                  promptText="Description du rapport..."
+                  prefHeight="80" wrapText="true"/>
+    </VBox>
+
+    <Separator/>
+
+    <!-- BOUTONS -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#annuler"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-background-radius: 5;
+                       -fx-padding: 8 20 8 20;"/>
+        <Button text="💾 Sauvegarder" onAction="#sauvegarder"
+                style="-fx-background-color: #27ae60; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-background-radius: 5;
+                       -fx-padding: 8 20 8 20;"/>
+    </HBox>
+
+</VBox>

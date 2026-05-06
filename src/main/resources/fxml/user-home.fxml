@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.shape.Circle?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mindjavafx.controller.UserDashboardHomeController"
+            fitToWidth="true" style="-fx-background-color: #f0f2f5; -fx-background: #f0f2f5;">
+
+    <VBox spacing="30" style="-fx-padding: 35;">
+        
+        <!-- TOP HEADER: WELCOME -->
+        <HBox alignment="CENTER_LEFT" spacing="20" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 4);">
+            <VBox HBox.hgrow="ALWAYS">
+                <Label text="🏠 Tableau de Bord" style="-fx-font-size: 14; -fx-text-fill: #3498db; -fx-font-weight: bold;"/>
+                <HBox spacing="10" alignment="BASELINE_LEFT">
+                    <Label text="Ravi de vous revoir," style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label fx:id="welcomeUserLabel" text="Utilisateur" style="-fx-font-size: 28; -fx-text-fill: #3498db; -fx-font-weight: bold;"/>
+                </HBox>
+                <Label text="Voici l'analyse consolidée de vos audits et rapports d'activité." style="-fx-text-fill: #7f8c8d; -fx-font-size: 14;"/>
+            </VBox>
+            <Button text="🚀 Nouvelle Analyse" onAction="#handleGenerateReport" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 25; -fx-background-radius: 30; -fx-cursor: hand;"/>
+        </HBox>
+
+        <!-- ROW 1: KEY METRICS CARDS -->
+        <HBox spacing="25">
+            <!-- Total Reports -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8f9fa); -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 8, 0, 0, 3); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 15;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="📂" style="-fx-font-size: 24;"/>
+                    <Label text="Total Rapports" style="-fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                </HBox>
+                <Label fx:id="reportCountLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            </VBox>
+
+            <!-- Global Score -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8f9fa); -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 8, 0, 0, 3); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 15;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="🎯" style="-fx-font-size: 24;"/>
+                    <Label text="Score Global" style="-fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                </HBox>
+                <HBox alignment="BASELINE_LEFT" spacing="5">
+                    <Label fx:id="globalScoreLabel" text="--" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #3b82f6;"/>
+                    <Label text="/100" style="-fx-font-size: 16; -fx-text-fill: #94a3b8;"/>
+                </HBox>
+            </VBox>
+
+            <!-- Total Recommendations -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8f9fa); -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 8, 0, 0, 3); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 15;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="📌" style="-fx-font-size: 24;"/>
+                    <Label text="Recommandations" style="-fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                </HBox>
+                <Label fx:id="totalRecoLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #1e293b;"/>
+            </VBox>
+
+            <!-- Resolved Points -->
+            <VBox spacing="10" HBox.hgrow="ALWAYS" style="-fx-background-color: linear-gradient(to bottom right, #ffffff, #f8f9fa); -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 8, 0, 0, 3); -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 15;">
+                <HBox alignment="CENTER_LEFT" spacing="10">
+                    <Label text="✅" style="-fx-font-size: 24;"/>
+                    <Label text="Points Résolus" style="-fx-text-fill: #64748b; -fx-font-weight: bold;"/>
+                </HBox>
+                <Label fx:id="resolvedRecoLabel" text="0" style="-fx-font-size: 32; -fx-font-weight: bold; -fx-text-fill: #10b981;"/>
+            </VBox>
+        </HBox>
+
+        <!-- ROW 2: PERFORMANCE & RECO STATUS -->
+        <HBox spacing="25">
+            <!-- PERFORMANCE ANALYTICS -->
+            <VBox spacing="20" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="📊 Performance Analytique (Détails)" style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;"/>
+                <VBox spacing="25">
+                    <VBox spacing="8">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="🛡️ Sécurité" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="securityStatusLabel" text="0/10" style="-fx-text-fill: #10b981; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <ProgressBar fx:id="securityProgress" progress="0" prefWidth="Infinity" prefHeight="12" style="-fx-accent: #10b981;"/>
+                    </VBox>
+                    <VBox spacing="8">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="⚖️ Conformité" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="complianceStatusLabel" text="0/10" style="-fx-text-fill: #f59e0b; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <ProgressBar fx:id="complianceProgress" progress="0" prefWidth="Infinity" prefHeight="12" style="-fx-accent: #f59e0b;"/>
+                    </VBox>
+                    <VBox spacing="8">
+                        <HBox alignment="CENTER_LEFT" spacing="10">
+                            <Label text="⚡ Performance" style="-fx-font-weight: bold; -fx-text-fill: #475569;"/>
+                            <Region HBox.hgrow="ALWAYS"/>
+                            <Label fx:id="performanceStatusLabel" text="0/10" style="-fx-text-fill: #ef4444; -fx-font-weight: bold;"/>
+                        </HBox>
+                        <ProgressBar fx:id="performanceProgress" progress="0" prefWidth="Infinity" prefHeight="12" style="-fx-accent: #ef4444;"/>
+                    </VBox>
+                </VBox>
+            </VBox>
+
+            <!-- RECO STATUS PIE -->
+            <VBox spacing="15" prefWidth="380" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="🔄 État des Recommandations" style="-fx-font-weight: bold; -fx-font-size: 18; -fx-text-fill: #1e293b;"/>
+                <PieChart fx:id="recoStatusChart" prefHeight="250" legendVisible="true" legendSide="BOTTOM"/>
+            </VBox>
+        </HBox>
+
+        <!-- ROW 3: TRENDS & STATUS -->
+        <HBox spacing="25">
+            <!-- SCORE EVOLUTION -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="📈 Évolution des Scores d'Audit" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e293b;"/>
+                <BarChart fx:id="scoreEvolutionChart" prefHeight="250" legendVisible="false">
+                    <xAxis><CategoryAxis label="Chronologie"/></xAxis>
+                    <yAxis><NumberAxis label="Score" autoRanging="false" lowerBound="0" upperBound="100"/></yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- REPORT TREND -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="📉 Fréquence des Audits" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e293b;"/>
+                <LineChart fx:id="trendChart" prefHeight="250" legendVisible="false">
+                    <xAxis><CategoryAxis/></xAxis>
+                    <yAxis><NumberAxis autoRanging="true"/></yAxis>
+                </LineChart>
+            </VBox>
+        </HBox>
+
+        <!-- ROW 4: RECENT CONTENT -->
+        <HBox spacing="25">
+            <!-- RECENT REPORTS -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="📄 Derniers Rapports" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e293b;"/>
+                <VBox fx:id="recentReportsContainer" spacing="10" />
+            </VBox>
+
+            <!-- RECENT RECOS -->
+            <VBox spacing="15" HBox.hgrow="ALWAYS" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                <Label text="📍 Recommandations Prioritaires" style="-fx-font-weight: bold; -fx-font-size: 16; -fx-text-fill: #1e293b;"/>
+                <VBox fx:id="recentRecosContainer" spacing="10" />
+            </VBox>
+        </HBox>
+
+    </VBox>
+
+</ScrollPane>

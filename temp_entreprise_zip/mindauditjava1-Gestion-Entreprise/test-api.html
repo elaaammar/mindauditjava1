@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test API MindAudit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .step {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        .step h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            margin-bottom: 10px;
+            transition: border 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #5568d3;
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        .result.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+        .result.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            display: block;
+        }
+        .code-display {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+            text-align: center;
+            padding: 20px;
+            background: #f0f4ff;
+            border-radius: 10px;
+            margin: 15px 0;
+            letter-spacing: 5px;
+        }
+        .info {
+            background: #fff3cd;
+            color: #856404;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            border: 1px solid #ffeaa7;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔐 Test API MindAudit</h1>
+        <p class="subtitle">Système de réinitialisation de mot de passe</p>
+
+        <div class="info">
+            ⚠️ <strong>Important:</strong> Lance d'abord l'application JavaFX!<br>
+            L'API doit être démarrée sur <code>http://localhost:8080/</code>
+        </div>
+
+        <!-- Étape 1 -->
+        <div class="step">
+            <h3>📧 Étape 1: Envoyer le code</h3>
+            <input type="text" id="contact" placeholder="Email ou téléphone" value="admin@mindaudit.com">
+            <button onclick="sendCode()">Envoyer le code</button>
+            <div id="result1" class="result"></div>
+            <div id="codeDisplay" class="code-display" style="display:none;"></div>
+        </div>
+
+        <!-- Étape 2 -->
+        <div class="step">
+            <h3>✅ Étape 2: Vérifier le code</h3>
+            <input type="text" id="code" placeholder="Code à 6 chiffres" maxlength="6">
+            <button onclick="verifyCode()" id="verifyBtn" disabled>Vérifier le code</button>
+            <div id="result2" class="result"></div>
+        </div>
+
+        <!-- Étape 3 -->
+        <div class="step">
+            <h3>🔑 Étape 3: Nouveau mot de passe</h3>
+            <input type="password" id="newPassword" placeholder="Nouveau mot de passe">
+            <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe">
+            <button onclick="resetPassword()" id="resetBtn" disabled>Réinitialiser</button>
+            <div id="result3" class="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080/api/forgot-password';
+        let currentContact = '';
+        let currentCode = '';
+
+        async function sendCode() {
+            const contact = document.getElementById('contact').value.trim();
+            const result = document.getElementById('result1');
+            const codeDisplay = document.getElementById('codeDisplay');
+            
+            if (!contact) {
+                showResult(result, 'Veuillez entrer un email ou téléphone', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/send-code`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contact })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentContact = contact;
+                    currentCode = data.data.code;
+                    
+                    showResult(result, `✅ ${data.message}`, true);
+                    
+                    // Afficher le code en grand
+                    codeDisplay.textContent = data.data.code;
+                    codeDisplay.style.display = 'block';
+                    
+                    // Activer l'étape 2
+                    document.getElementById('verifyBtn').disabled = false;
+                    document.getElementById('code').value = data.data.code; // Pré-remplir
+                } else {
+                    showResult(result, `❌ ${data.message}`, false);
+                }
+            } catch (error) {
+                showResult(result, `❌ Erreur: ${error.message}. L'API est-elle démarrée?`, false);
+            }
+        }
+
+        async function verifyCode() {
+            const code = document.getElementById('code').value.trim();
+            const result = document.getElementById('result2');
+
+            if (!code || code.length !== 6) {
+                showResult(result, 'Le code doit contenir 6 chiffres', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/verify-code`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        contact: currentContact,
+                        code: code 
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    currentCode = code;
+                    showResult(result, `✅ ${data.message}`, true);
+                    
+                    // Activer l'étape 3
+                    document.getElementById('resetBtn').disabled = false;
+                } else {
+                    showResult(result, `❌ ${data.message}`, false);
+                }
+            } catch (error) {
+                showResult(result, `❌ Erreur: ${error.message}`, false);
+            }
+        }
+
+        async function resetPassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            const result = document.getElementById('result3');
+
+            if (!newPassword || !confirmPassword) {
+                showResult(result, 'Veuillez remplir tous les champs', false);
+                return;
+            }
+
+            if (newPassword !== confirmPassword) {
+                showResult(result, 'Les mots de passe ne correspondent pas', false);
+                return;
+            }
+
+            if (newPassword.length < 6) {
+                showResult(result, 'Le mot de passe doit contenir au moins 6 caractères', false);
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/reset`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ 
+                        contact: currentContact,
+                        code: currentCode,
+                        newPassword: newPassword
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    showResult(result, `✅ ${data.message}! Tu peux maintenant te connecter.`, true);
+                    
+                    // Réinitialiser le formulaire après 3 secondes
+                    setTimeout(() => {
+                        location.reload();
+                    }, 3000);
+                } else {
+                    showResult(result, `❌ ${data.message}`, false);
+                }
+            } catch (error) {
+                showResult(result, `❌ Erreur: ${error.message}`, false);
+            }
+        }
+
+        function showResult(element, message, isSuccess) {
+            element.textContent = message;
+            element.className = 'result ' + (isSuccess ? 'success' : 'error');
+        }
+    </script>
+</body>
+</html>

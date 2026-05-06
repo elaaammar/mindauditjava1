@@ -1,0 +1,831 @@
+/* ==========================================================================
+   Gestion Audit — premium UI (JavaFX)
+   Shell layout + cards + controls. Uses looked-up colors on .root.
+   ========================================================================== */
+
+.root {
+    ga-bg0: #f1f5f9;
+    ga-bg1: #e0e7ff;
+    ga-bg2: #ddd6fe;
+    ga-surface: #ffffff;
+    ga-surface-2: #f8fafc;
+    ga-text: #0f172a;
+    ga-text-muted: #64748b;
+    ga-border: #e2e8f0;
+    ga-indigo: #4f46e5;
+    ga-indigo-mid: #6366f1;
+    ga-indigo-dark: #4338ca;
+    ga-violet: #7c3aed;
+    ga-shadow: rgba(15, 23, 42, 0.12);
+    ga-glow: rgba(99, 102, 241, 0.35);
+
+    -fx-font-family: "Segoe UI", "Inter", system-ui, sans-serif;
+    -fx-background-color: linear-gradient(160deg, ga-bg0 0%, #eef2ff 45%, ga-bg2 100%);
+    -fx-text-fill: #1e293b;
+    -fx-focus-color: rgba(79, 70, 229, 0.55);
+    -fx-faint-focus-color: rgba(79, 70, 229, 0.18);
+}
+
+/* ----- App shell (client / admin frames) -------------------------------- */
+/* Do not set -fx-background-color here — scene .root supplies the canvas. */
+
+.content-area {
+    -fx-background-color: rgba(255, 255, 255, 0.55);
+    -fx-background-radius: 0 0 0 0;
+    -fx-border-color: rgba(255, 255, 255, 0.9);
+    -fx-border-width: 1 0 0 0;
+    -fx-padding: 22px 26px 26px 26px;
+    -fx-effect: innershadow(gaussian, rgba(255, 255, 255, 0.65), 20, 0.3, 0, -6);
+}
+
+.admin-content {
+    -fx-background-color: linear-gradient(to bottom, rgba(248, 250, 252, 0.95), rgba(241, 245, 249, 0.98));
+    -fx-border-color: transparent;
+    -fx-effect: null;
+}
+
+/* ----- Landing (main chooser) -------------------------------------------- */
+.landing-root {
+    -fx-background-color: linear-gradient(135deg, #1e1b4b 0%, #312e81 38%, #4c1d95 72%, #5b21b6 100%);
+    -fx-padding: 32px;
+}
+
+.landing-card {
+    -fx-background-color: rgba(255, 255, 255, 0.97);
+    -fx-background-radius: 24px;
+    -fx-border-color: rgba(255, 255, 255, 0.55);
+    -fx-border-width: 1px;
+    -fx-border-radius: 24px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.35), 40, 0.12, 0, 18);
+    -fx-max-width: 560px;
+}
+
+.landing-kicker {
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+    -fx-text-fill: ga-indigo;
+    -fx-letter-spacing: 0.22em;
+}
+
+.landing-title {
+    -fx-font-size: 30px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-text;
+    -fx-wrap-text: true;
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.15), 0, 0, 0, 1);
+}
+
+.landing-sub {
+    -fx-font-size: 15px;
+    -fx-text-fill: ga-text-muted;
+    -fx-wrap-text: true;
+    -fx-line-spacing: 3px;
+}
+
+.landing-cta {
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-padding: 16px 20px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 18, 0.15, 0, 6);
+}
+
+.landing-cta:hover {
+    -fx-effect: dropshadow(gaussian, ga-glow, 24, 0.2, 0, 8);
+}
+
+/* ----- Top navigation (client dashboard) -------------------------------- */
+.top-nav {
+    -fx-background-color: rgba(255, 255, 255, 0.92);
+    -fx-border-color: rgba(226, 232, 240, 0.95);
+    -fx-border-width: 0 0 1 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.08), 24, 0.15, 0, 4);
+}
+
+.brand-title {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-indigo;
+    -fx-letter-spacing: -0.5px;
+}
+
+.nav-link {
+    -fx-background-color: rgba(241, 245, 249, 0.9);
+    -fx-text-fill: #475569;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 10px 18px;
+    -fx-background-radius: 999px;
+    -fx-border-radius: 999px;
+    -fx-border-color: rgba(226, 232, 240, 0.9);
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+}
+
+.nav-link:hover {
+    -fx-background-color: #ffffff;
+    -fx-text-fill: #0f172a;
+    -fx-border-color: #c7d2fe;
+}
+
+.nav-link.active {
+    -fx-background-color: linear-gradient(to right, ga-indigo, ga-indigo-mid);
+    -fx-text-fill: #ffffff;
+    -fx-border-color: transparent;
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.45), 12, 0.2, 0, 4);
+}
+
+.nav-link:pressed {
+    -fx-opacity: 0.92;
+}
+
+.nav-logout {
+    -fx-min-width: 120px;
+}
+
+/* ----- Admin sidebar (dark) ---------------------------------------------- */
+.sidebar {
+    -fx-background-color: linear-gradient(to bottom, #1e293b, #0f172a);
+    -fx-border-color: rgba(15, 23, 42, 0.85);
+    -fx-border-width: 0 1 0 0;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.45), 28, 0.2, 6, 0);
+}
+
+.sidebar-kicker {
+    -fx-font-size: 11px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #94a3b8;
+    -fx-letter-spacing: 0.18em;
+}
+
+.sidebar-brand {
+    -fx-font-size: 22px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #f8fafc;
+    -fx-padding: 0 0 8 0;
+}
+
+.sidebar .sidebar-button {
+    -fx-background-color: rgba(255, 255, 255, 0.06);
+    -fx-text-fill: #e2e8f0;
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-padding: 12px 16px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-border-color: transparent;
+    -fx-cursor: hand;
+}
+
+.sidebar .sidebar-button:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.12);
+    -fx-text-fill: #ffffff;
+}
+
+.sidebar .sidebar-button.active {
+    -fx-background-color: linear-gradient(to right, rgba(99, 102, 241, 0.45), rgba(79, 70, 229, 0.35));
+    -fx-text-fill: #ffffff;
+    -fx-border-color: rgba(129, 140, 248, 0.85);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.35), 12, 0.2, 0, 2);
+}
+
+.sidebar .sidebar-button:pressed {
+    -fx-background-color: rgba(255, 255, 255, 0.18);
+}
+
+.sidebar .sidebar-button.sidebar-logout {
+    -fx-text-fill: #fca5a5;
+}
+
+.sidebar .sidebar-button.sidebar-logout:hover {
+    -fx-background-color: rgba(239, 68, 68, 0.18);
+    -fx-text-fill: #fecaca;
+}
+
+/* ----- Messagerie admin -------------------------------------------------- */
+.messages-shell {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.messages-shell > .split-pane-divider {
+    -fx-padding: 0 4 0 4;
+    -fx-background-color: transparent;
+}
+
+.messages-shell > .split-pane-divider > .horizontal-grabber {
+    -fx-background-color: #94a3b8;
+    -fx-background-radius: 4px;
+    -fx-pref-width: 5px;
+}
+
+.inbox-panel {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 14, 0.15, 0, 0);
+}
+
+.inbox-title {
+    -fx-font-size: 20px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-text;
+}
+
+.chat-pane {
+    -fx-background-color: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+}
+
+.empty-state-title {
+    -fx-font-size: 17px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #64748b;
+}
+
+.empty-state-sub {
+    -fx-font-size: 14px;
+    -fx-text-fill: #94a3b8;
+    -fx-wrap-text: true;
+    -fx-text-alignment: center;
+}
+
+/* ----- Misc layout helpers ----------------------------------------------- */
+.main-container {
+    -fx-background-color: transparent;
+}
+
+.scroll-clean {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-clean > .viewport {
+    -fx-background-color: transparent;
+}
+
+.admin-toolbar {
+    -fx-background-color: rgba(255, 255, 255, 0.75);
+    -fx-background-radius: 16px;
+    -fx-padding: 16px 24px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 12, 0, 0, 4);
+    -fx-border-color: rgba(226, 232, 240, 0.6);
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+}
+
+.admin-main-container {
+    -fx-padding: 30px 40px;
+}
+
+.premium-separator {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent ga-border transparent;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 4 0 8 0;
+}
+
+/* ==========================================================================
+   Typography
+   ========================================================================== */
+
+.header {
+    -fx-font-size: 26px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-text;
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.12), 0, 0, 0, 1);
+}
+
+.header-title {
+    -fx-font-size: 26px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-text;
+    -fx-letter-spacing: -0.4px;
+}
+
+.subtitle {
+    -fx-font-size: 14px;
+    -fx-text-fill: ga-text-muted;
+    -fx-wrap-text: true;
+}
+
+/* ==========================================================================
+   Cards
+   ========================================================================== */
+
+.premium-card {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 16px;
+    -fx-border-radius: 16px;
+    -fx-border-color: rgba(226, 232, 240, 0.95);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, ga-shadow, 22, 0.18, 0, 6);
+    -fx-padding: 20px;
+}
+
+.reclamation-card {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 18px;
+    -fx-border-radius: 18px;
+    -fx-border-color: rgba(226, 232, 240, 0.9);
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 16, 0.15, 0, 4);
+    -fx-padding: 22px;
+}
+
+.reclamation-card:hover {
+    -fx-border-color: #c4b5fd;
+    -fx-effect: dropshadow(gaussian, rgba(99, 102, 241, 0.28), 28, 0.2, 0, 10);
+}
+
+.admin-card {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 14px;
+    -fx-border-color: ga-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 14px;
+    -fx-padding: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 10, 0.15, 0, 3);
+}
+
+.admin-card:hover {
+    -fx-background-color: #fafbfc;
+    -fx-border-color: #cbd5e1;
+}
+
+.premium-card {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 20px;
+    -fx-padding: 24px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 16, 0.1, 0, 4);
+    -fx-border-color: rgba(226, 232, 240, 0.8);
+    -fx-border-width: 1px;
+    -fx-border-radius: 20px;
+}
+
+.premium-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.12), 24, 0.15, 0, 8);
+    -fx-border-color: rgba(199, 210, 254, 0.9);
+}
+
+.stat-card {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 24px;
+    -fx-padding: 28px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 20, 0.1, 0, 6);
+}
+
+.card-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-text;
+}
+
+/* ----- Chat Bubbles ------------------------------------------------------ */
+.chat-bubble-client {
+    -fx-background-color: linear-gradient(to right, ga-indigo, ga-indigo-mid);
+    -fx-background-radius: 18px 18px 4px 18px;
+    -fx-padding: 12px 18px;
+}
+
+.chat-bubble-admin {
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 18px 18px 18px 4px;
+    -fx-padding: 12px 18px;
+    -fx-border-color: #e2e8f0;
+    -fx-border-width: 1px;
+    -fx-border-radius: 18px 18px 18px 4px;
+}
+
+.chat-bubble-text {
+    -fx-font-size: 14px;
+}
+
+.card-date {
+    -fx-font-size: 12px;
+    -fx-text-fill: #94a3b8;
+}
+
+/* ==========================================================================
+   Status badges
+   ========================================================================== */
+
+.status-badge {
+    -fx-padding: 6px 14px;
+    -fx-background-radius: 999px;
+    -fx-font-size: 12px;
+    -fx-font-weight: 700;
+}
+
+.status-en_attente {
+    -fx-background-color: #fef3c7;
+    -fx-text-fill: #b45309;
+}
+
+.status-en_cours {
+    -fx-background-color: #dbeafe;
+    -fx-text-fill: #1d4ed8;
+}
+
+.status-resolue {
+    -fx-background-color: #d1fae5;
+    -fx-text-fill: #047857;
+}
+
+.status-cloturee {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+}
+
+/* ==========================================================================
+   Buttons
+   ========================================================================== */
+
+.btn {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-padding: 10px 22px;
+    -fx-cursor: hand;
+    -fx-text-fill: #f8fafc;
+    -fx-background-color: linear-gradient(to bottom, #64748b, #475569);
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.18), 8, 0.2, 0, 2);
+}
+
+.btn:hover {
+    -fx-background-color: linear-gradient(to bottom, #475569, #334155);
+}
+
+.btn:pressed {
+    -fx-background-color: #334155;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.1), 4, 0, 0, 0);
+}
+
+.btn:disabled {
+    -fx-opacity: 0.5;
+    -fx-cursor: default;
+}
+
+.btn-primary {
+    -fx-background-color: linear-gradient(to right, ga-indigo, ga-indigo-mid);
+    -fx-text-fill: #ffffff;
+}
+
+.btn-primary:hover {
+    -fx-background-color: linear-gradient(to right, ga-indigo-dark, ga-indigo);
+}
+
+.btn-primary:pressed {
+    -fx-background-color: ga-indigo-dark;
+}
+
+.btn-success {
+    -fx-background-color: linear-gradient(to right, #059669, #10b981);
+    -fx-text-fill: #ffffff;
+}
+
+.btn-success:hover {
+    -fx-background-color: linear-gradient(to right, #047857, #059669);
+}
+
+.btn-success:pressed {
+    -fx-background-color: #065f46;
+}
+
+.btn-danger {
+    -fx-background-color: linear-gradient(to right, #dc2626, #ef4444);
+    -fx-text-fill: #ffffff;
+}
+
+.btn-danger:hover {
+    -fx-background-color: linear-gradient(to right, #b91c1c, #dc2626);
+}
+
+.btn-danger:pressed {
+    -fx-background-color: #991b1b;
+}
+
+.btn-outline {
+    -fx-background-color: ga-surface;
+    -fx-border-color: #cbd5e1;
+    -fx-border-width: 1px;
+    -fx-text-fill: #334155;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 4, 0.15, 0, 1);
+}
+
+.btn-outline:hover {
+    -fx-background-color: #f8fafc;
+    -fx-border-color: #94a3b8;
+}
+
+.btn-outline:pressed {
+    -fx-background-color: #f1f5f9;
+}
+
+/* ==========================================================================
+   Forms
+   ========================================================================== */
+
+.form-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #334155;
+}
+
+.text-field,
+.text-area,
+.combo-box {
+    -fx-background-color: ga-surface;
+    -fx-border-color: #cbd5e1;
+    -fx-border-radius: 12px;
+    -fx-background-radius: 12px;
+    -fx-padding: 10px 14px;
+    -fx-font-size: 14px;
+    -fx-text-fill: #0f172a;
+    -fx-prompt-text-fill: #94a3b8;
+}
+
+.text-field:focused,
+.text-area:focused,
+.combo-box:focused {
+    -fx-border-color: ga-indigo;
+    -fx-background-insets: 0;
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.25), 0, 0, 0, 0);
+}
+
+.text-area {
+    -fx-padding: 10px 14px;
+}
+
+.combo-box-popup > .list-view {
+    -fx-background-color: ga-surface;
+    -fx-border-color: ga-border;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+}
+
+.combo-box-popup .list-cell:hover {
+    -fx-background-color: #eef2ff;
+}
+
+.combo-box-popup .list-cell:selected {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: ga-indigo-dark;
+}
+
+/* ==========================================================================
+   Scroll & split panes
+   ========================================================================== */
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background: transparent;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar:vertical,
+.scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-pref-width: 10px;
+    -fx-pref-height: 10px;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 5px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #94a3b8;
+}
+
+.split-pane {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.split-pane > .split-pane-divider {
+    -fx-padding: 0 3 0 3;
+    -fx-background-color: transparent;
+}
+
+.split-pane > .split-pane-divider > .horizontal-grabber {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 3px;
+}
+
+.split-pane > .split-pane-divider > .vertical-grabber {
+    -fx-background-color: #cbd5e1;
+    -fx-background-radius: 3px;
+}
+
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+.table-view {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 14px;
+    -fx-border-radius: 14px;
+    -fx-border-color: ga-border;
+    -fx-border-width: 1px;
+    -fx-padding: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 12, 0.12, 0, 2);
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #f8fafc;
+    -fx-background-radius: 13px 13px 0 0;
+    -fx-padding: 0 0 5px 0;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent transparent #e5e7eb transparent;
+}
+
+.table-view .column-header .label {
+    -fx-font-weight: 700;
+    -fx-text-fill: #475569;
+    -fx-font-size: 13px;
+    -fx-padding: 10px 5px;
+}
+
+.table-row-cell {
+    -fx-background-color: ga-surface;
+    -fx-border-color: transparent transparent #f1f5f9 transparent;
+    -fx-cell-size: 46px;
+}
+
+.table-row-cell:odd {
+    -fx-background-color: #fbfcfe;
+}
+
+.table-row-cell:selected {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: ga-indigo;
+}
+
+/* ==========================================================================
+   Chat
+   ========================================================================== */
+
+.chat-container {
+    -fx-background-color: linear-gradient(to bottom, #ffffff, #f8fafc);
+    -fx-border-color: rgba(226, 232, 240, 0.95);
+    -fx-border-radius: 16px;
+    -fx-background-radius: 16px;
+    -fx-border-width: 1px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.06), 16, 0.15, 0, 4);
+}
+
+.chat-container > .viewport {
+    -fx-background-color: transparent;
+}
+
+.chat-bubble-client {
+    -fx-background-color: linear-gradient(to bottom right, ga-indigo, ga-indigo-mid);
+    -fx-background-radius: 18px 18px 4px 18px;
+    -fx-padding: 12px 16px;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, rgba(79, 70, 229, 0.35), 10, 0.2, 0, 3);
+}
+
+.chat-bubble-admin {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 18px 18px 18px 4px;
+    -fx-padding: 12px 16px;
+    -fx-text-fill: #1e293b;
+    -fx-border-color: ga-border;
+    -fx-border-width: 1px;
+    -fx-border-radius: 18px 18px 18px 4px;
+    -fx-effect: dropshadow(gaussian, rgba(15, 23, 42, 0.05), 6, 0.12, 0, 2);
+}
+
+.chat-bubble-text {
+    -fx-font-size: 14px;
+    -fx-line-spacing: 2px;
+}
+
+.chat-date {
+    -fx-font-size: 10px;
+    -fx-font-weight: 600;
+    -fx-text-fill: #94a3b8;
+}
+
+/* ==========================================================================
+   Stats & charts
+   ========================================================================== */
+
+.stat-card {
+    -fx-background-color: ga-surface;
+    -fx-background-radius: 16px;
+    -fx-border-color: rgba(226, 232, 240, 0.95);
+    -fx-border-width: 1px;
+    -fx-border-radius: 16px;
+    -fx-effect: dropshadow(gaussian, ga-shadow, 20, 0.15, 0, 5);
+    -fx-padding: 22px;
+    -fx-min-width: 200px;
+}
+
+.stat-value {
+    -fx-font-size: 32px;
+    -fx-font-weight: 800;
+    -fx-text-fill: ga-text;
+}
+
+.stat-label {
+    -fx-font-size: 13px;
+    -fx-text-fill: ga-text-muted;
+    -fx-font-weight: 700;
+    -fx-padding: 0 0 10 0;
+}
+
+.chart {
+    -fx-padding: 6px;
+}
+
+.chart-plot-background {
+    -fx-background-color: transparent;
+}
+
+.chart-content {
+    -fx-background-color: transparent;
+}
+
+.chart-title {
+    -fx-font-size: 13px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #475569;
+}
+
+.chart-legend {
+    -fx-background-color: transparent;
+    -fx-padding: 8px 0 0 0;
+}
+
+.chart-legend-item {
+    -fx-text-fill: #475569;
+}
+
+.axis {
+    -fx-tick-label-fill: #64748b;
+}
+
+.axis-label {
+    -fx-text-fill: #64748b;
+}
+
+.default-color0.chart-pie { -fx-pie-color: ga-indigo; }
+.default-color1.chart-pie { -fx-pie-color: #10b981; }
+.default-color2.chart-pie { -fx-pie-color: #f59e0b; }
+.default-color3.chart-pie { -fx-pie-color: #ec4899; }
+.default-color4.chart-pie { -fx-pie-color: #06b6d4; }
+
+/* ==========================================================================
+   Tooltips
+   ========================================================================== */
+
+.tooltip {
+    -fx-background-color: #1e293b;
+    -fx-text-fill: #f8fafc;
+    -fx-font-size: 12px;
+    -fx-background-radius: 10px;
+    -fx-padding: 8px 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 12, 0.2, 0, 3);
+}
+
+/* ----- Legacy: horizontal “sidebar” buttons (if still used anywhere) ------ */
+.sidebar-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #475569;
+    -fx-font-size: 15px;
+    -fx-font-weight: 600;
+    -fx-padding: 12px 24px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-cursor: hand;
+    -fx-background-radius: 0 10 10 0;
+}
+
+.sidebar-button:hover {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #0f172a;
+}
+
+.sidebar-button.active {
+    -fx-background-color: #e0e7ff;
+    -fx-text-fill: ga-indigo;
+    -fx-border-color: transparent transparent transparent ga-indigo;
+    -fx-border-width: 0 0 0 4px;
+}
+
+.sidebar-button:pressed {
+    -fx-background-color: #c7d2fe;
+}

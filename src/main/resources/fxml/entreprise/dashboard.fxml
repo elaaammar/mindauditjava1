@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:id="mainBorderPane"
+            fx:controller="com.example.mindjavafx.controller.DashboardController"
+            style="-fx-background-color: #ecf0f1;">
+    
+    <!-- HEADER PROFESSIONNEL -->
+    <top>
+        <HBox spacing="20" alignment="CENTER_LEFT" style="-fx-background-color: white; -fx-padding: 15 30; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);">
+            <!-- Logo -->
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="🧠" style="-fx-font-size: 24;"/>
+                <Label text="MindAudit" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            </HBox>
+            
+            <!-- Search bar -->
+            <HBox spacing="10" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS" style="-fx-padding: 0 0 0 80;">
+                <TextField fx:id="globalSearchField" promptText="🔍 Rechercher dans le système..." prefWidth="400" 
+                          onAction="#handleGlobalSearch"
+                          style="-fx-background-color: #f8f9fa; -fx-background-radius: 25; -fx-padding: 10 20; -fx-border-color: #dee2e6; -fx-border-radius: 25; -fx-border-width: 1;"/>
+                <Button text="🔍" onAction="#handleGlobalSearch"
+                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10 15; -fx-background-radius: 20; -fx-cursor: hand; -fx-font-size: 14;"/>
+            </HBox>
+            
+            <!-- User info + actions -->
+            <HBox spacing="15" alignment="CENTER_RIGHT">
+                <VBox alignment="CENTER_RIGHT" spacing="2">
+                    <Label fx:id="userWelcomeLabel" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+                    <Label text="Connecté" style="-fx-font-size: 10; -fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
+                </VBox>
+                <Button text="👤 Profil" onAction="#showProfile" 
+                       style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 12;"/>
+                <Button text="🚪 Déconnexion" onAction="#handleLogout" 
+                       style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-padding: 10 20; -fx-background-radius: 8; -fx-cursor: hand; -fx-font-weight: bold; -fx-font-size: 12;"/>
+            </HBox>
+        </HBox>
+    </top>
+    
+    <!-- SIDEBAR MODERNE -->
+    <left>
+        <VBox fx:id="sidebarVBox" spacing="8" style="-fx-background-color: #2c3e50; -fx-padding: 25 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 2, 0);" prefWidth="240">
+            <Label text="NAVIGATION" style="-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: #95a5a6; -fx-padding: 10 25; -fx-letter-spacing: 1;"/>
+            
+            <Button fx:id="statisticsButton" text="📊 Dashboard" onAction="#showStatistics" maxWidth="Infinity" 
+                    style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand; -fx-font-weight: bold;"/>
+            
+            <Button fx:id="userManagementButton" text="👥 Utilisateurs" onAction="#showUserManagement" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <Button fx:id="rolePermissionButton" text="🔐 Rôles et Permissions" onAction="#showRolePermission" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+            
+            <!-- Separator -->
+            <VBox style="-fx-padding: 20 0;"/>
+            
+            <Label text="SYSTÈME" style="-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: #95a5a6; -fx-padding: 10 25; -fx-letter-spacing: 1;"/>
+            
+            <Button fx:id="settingsButton" text="⚙️ Paramètres" onAction="#showProfile" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+        </VBox>
+    </left>
+    
+    <!-- CONTENU PRINCIPAL -->
+    <center>
+        <StackPane fx:id="contentArea" style="-fx-background-color: #ecf0f1;"/>
+    </center>
+</BorderPane>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.shape.*?>
+
+<VBox prefHeight="700.0" prefWidth="1050.0" spacing="0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.audit.auditaifx.controller.ClientController">
+
+    <!-- HEADER -->
+    <HBox alignment="CENTER_LEFT" spacing="15" styleClass="header" style="-fx-padding: 15;">
+        <Label styleClass="header-title" text="👤 AuditAI — Espace Client" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button onAction="#switchAdmin" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-border-color: white; -fx-border-radius: 5; -fx-cursor: hand;" text="Vue Admin" />
+    </HBox>
+
+    <HBox VBox.vgrow="ALWAYS">
+        <!-- SIDEBAR -->
+        <VBox prefWidth="240.0" spacing="10" style="-fx-background-color: #2c3e50; -fx-padding: 20;">
+            <Label style="-fx-font-size: 14; -fx-text-fill: #bdc3c7; -fx-font-weight: bold;" text="NAVIGATION" />
+            <Button onAction="#showDashboard" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand;" text="Accueil" />
+            <Button onAction="#showAllReports" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand;" text="Mes Rapports" />
+            <Button onAction="#showScanView" maxWidth="Infinity" alignment="CENTER_LEFT" style="-fx-background-color: transparent; -fx-text-fill: white; -fx-font-size: 14; -fx-cursor: hand;" text="📄 Scan de documents" />
+            <Separator style="-fx-opacity: 0.2;" />
+            <Button onAction="#ajouterRapport" maxWidth="Infinity" styleClass="btn-add-rapport" text="+ Nouveau Rapport" />
+            <Region VBox.vgrow="ALWAYS" />
+        </VBox>
+
+        <!-- MAIN AREA -->
+        <StackPane HBox.hgrow="ALWAYS">
+            
+            <!-- VIEW 1: DYNAMIC DASHBOARD -->
+            <ScrollPane fx:id="lblNoSelection" fitToWidth="true" style="-fx-background-color: #f4f7f6;">
+                <VBox alignment="TOP_CENTER" spacing="30" style="-fx-padding: 30;">
+                    <Label style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #1a237e;" text="Résumé de vos Audits" />
+                    
+                    <FlowPane alignment="CENTER" hgap="25" vgap="25">
+                        <VBox alignment="CENTER" prefHeight="130" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;" text="Mes Rapports" />
+                            <Label fx:id="lblStatTotalRapports" style="-fx-font-size: 40; -fx-font-weight: bold; -fx-text-fill: #3498db;" text="0" />
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="130" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;" text="Recommandations" />
+                            <Label fx:id="lblStatTotalReco" style="-fx-font-size: 40; -fx-font-weight: bold; -fx-text-fill: #e67e22;" text="0" />
+                        </VBox>
+                        <VBox alignment="CENTER" prefHeight="130" prefWidth="190" style="-fx-background-color: white; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;" text="Points Résolus" />
+                            <Label fx:id="lblStatRecoResolues" style="-fx-font-size: 40; -fx-font-weight: bold; -fx-text-fill: #2ecc71;" text="0" />
+                        </VBox>
+                    </FlowPane>
+
+                    <HBox spacing="20" alignment="CENTER">
+                        <VBox spacing="10" prefWidth="400" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📊 Avancement des Recommandations" />
+                            <PieChart fx:id="chartRecoStatus" prefHeight="250" />
+                        </VBox>
+                        <VBox spacing="15" prefWidth="450" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="🔔 Derniers Rapports" />
+                            <VBox fx:id="vboxRecentReportsClient" spacing="10" />
+                            <Button onAction="#showAllReports" style="-fx-background-color: transparent; -fx-text-fill: #3498db;" text="Voir tous mes rapports →" />
+                            
+                            <Separator />
+                            
+                            <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📌 Recos Récentes" />
+                            <VBox fx:id="vboxRecentRecosClient" spacing="10" />
+                        </VBox>
+                    </HBox>
+                    
+                    <!-- NOUVEAU GRAPHIQUE DYNAMIQUE CLIENT -->
+                    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);">
+                        <Label style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📈 Tendance des créations d'audits" />
+                        <LineChart fx:id="chartTendanceClient" prefHeight="200" legendVisible="false">
+                            <xAxis><CategoryAxis label="Date" /></xAxis>
+                            <yAxis><NumberAxis label="Nombre de rapports" /></yAxis>
+                        </LineChart>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- VIEW 2: ALL REPORTS TABLE -->
+            <VBox fx:id="allReportsView" spacing="15" style="-fx-background-color: #f4f7f6; -fx-padding: 25;" visible="false">
+                <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="📂 Mes Rapports d'Audit" />
+
+                <!-- Toolbar filtres Client -->
+                <HBox alignment="CENTER_LEFT" spacing="10" style="-fx-background-color: white; -fx-background-radius: 10; -fx-padding: 10 14; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);">
+                    <TextField fx:id="txtSearchReports" prefWidth="200" prefHeight="30" promptText="🔍 Rechercher un rapport..." style="-fx-background-color: #f5f6fa; -fx-background-radius: 7; -fx-font-size: 12px;" />
+                    <ComboBox fx:id="comboFilterStatut" prefWidth="150" prefHeight="30" promptText="Statut" styleClass="combo-filter" />
+                    <Button onAction="#resetFilters" styleClass="btn-reset" text="Initialiser" />
+                    <Region HBox.hgrow="ALWAYS" />
+                </HBox>
+
+                <TableView fx:id="rapportsTable" VBox.vgrow="ALWAYS">
+                    <columnResizePolicy><TableView fx:constant="CONSTRAINED_RESIZE_POLICY" /></columnResizePolicy>
+                    <columns>
+                        <TableColumn fx:id="colTitre" text="Titre" />
+                        <TableColumn fx:id="colAuditeur" text="Auditeur" />
+                        <TableColumn fx:id="colDate" text="Date" />
+                        <TableColumn fx:id="colStatut" text="Statut" />
+                        <TableColumn fx:id="colActionsRapport" text="Actions" />
+                    </columns>
+                </TableView>
+            </VBox>
+
+            <!-- VIEW 3: DETAIL VIEW -->
+            <ScrollPane fx:id="detailPane" fitToWidth="true" style="-fx-background-color: #f4f7f6;" visible="false">
+                <VBox spacing="25" style="-fx-padding: 25;">
+                    <HBox alignment="CENTER_LEFT" spacing="15">
+                        <Button onAction="#showAllReports" style="-fx-background-color: #bdc3c7; -fx-text-fill: white;" text="← Liste" />
+                        <VBox HBox.hgrow="ALWAYS">
+                            <Label fx:id="lblTitre" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" text="Titre du Rapport" />
+                            <HBox spacing="15">
+                                <Label fx:id="lblAuditeur" style="-fx-text-fill: #7f8c8d;" text="Auditeur" />
+                                <Label fx:id="lblDate" style="-fx-text-fill: #7f8c8d;" text="Date" />
+                                <Label fx:id="lblStatut" style="-fx-font-weight: bold; -fx-text-fill: #3498db;" text="Statut" />
+                            </HBox>
+                        </VBox>
+                        <HBox spacing="10">
+                            <Button onAction="#modifierRapport" styleClass="btn-edit" text="Modifier" />
+                            <Button onAction="#supprimerRapport" styleClass="btn-delete" text="Supprimer" />
+                            <Button onAction="#exporterPDF" styleClass="btn-pdf" text="Telecharger PDF" />
+                            <Label fx:id="lblScoreBadge" styleClass="score-badge" visible="false" managed="false" />
+                            <Label fx:id="lblTrophyBadge" text="🏆 100% Résolu" style="-fx-background-color: #f1c40f; -fx-text-fill: white; -fx-padding: 4 10; -fx-background-radius: 15; -fx-font-weight: bold; -fx-font-size: 11;" visible="false" managed="false" />
+                        </HBox>
+                    </HBox>
+                    
+                    <Separator />
+
+                    <VBox spacing="10" style="-fx-padding: 15; -fx-background-color: white; -fx-background-radius: 10;">
+                        <Label styleClass="section-title" text="📝 Description" />
+                        <TextArea fx:id="txtDescription" editable="false" prefHeight="100" style="-fx-background-color: transparent; -fx-border-width: 0;" wrapText="true" />
+                    </VBox>
+
+                    <VBox spacing="15">
+                        <Label styleClass="section-title" text="📌 Recommandations" />
+                        <VBox fx:id="recommendationsContainer" spacing="12" />
+                    </VBox>
+
+                    <VBox spacing="15">
+                        <Label styleClass="section-title" text="⚠️ Risques Détectés" />
+                        <VBox fx:id="risquesContainer" spacing="12" />
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- VIEW 4: DOCUMENT SCAN -->
+            <ScrollPane fx:id="scanScrollPane" visible="false" fitToWidth="true" style="-fx-background-color: #f0f2f5;">
+                <VBox fx:id="scanView" spacing="25" alignment="TOP_CENTER" style="-fx-padding: 40; -fx-background-color: transparent;">
+                    
+                    <VBox alignment="CENTER" spacing="8">
+                        <Label text="🔍 Scan Intelligent de Documents" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1a237e;" />
+                        <Label text="L'IA analyse vos documents pour en extraire les points critiques automatiquement." style="-fx-font-size: 14; -fx-text-fill: #7f8c8d;" />
+                    </VBox>
+                    
+                    <!-- UPLOAD AREA -->
+                    <VBox alignment="CENTER" spacing="20" prefHeight="220" maxWidth="650" style="-fx-background-color: white; -fx-background-radius: 20; -fx-border-color: #1a237e; -fx-border-width: 2; -fx-border-style: dashed; -fx-border-radius: 20; -fx-padding: 30; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);">
+                        <Label text="📁" style="-fx-font-size: 60;" />
+                        <VBox alignment="CENTER" spacing="5">
+                            <Label text="Glissez-déposez un document d'audit" style="-fx-font-weight: bold; -fx-font-size: 16;" />
+                            <Label text="Format supportés : PDF, DOCX, TXT" style="-fx-text-fill: #95a5a6;" />
+                        </VBox>
+                        <Button text="Parcourir les fichiers" onAction="#handleChooseFileScan" style="-fx-background-color: #1a237e; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 25; -fx-background-radius: 30; -fx-cursor: hand;" />
+                        <Label fx:id="lblFileName" text="Aucun fichier sélectionné" style="-fx-font-size: 13; -fx-font-style: italic; -fx-text-fill: #34495e;" />
+                    </VBox>
+    
+                    <!-- PROGRESS AREA -->
+                    <VBox fx:id="scanProgressBox" visible="false" spacing="15" alignment="CENTER" maxWidth="650" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 15;">
+                        <ProgressBar fx:id="scanProgressBar" prefWidth="Infinity" progress="0.0" style="-fx-accent: #1a237e;" />
+                        <Label fx:id="lblScanStatus" text="Initialisation de l'analyse..." style="-fx-font-weight: bold;" />
+                    </VBox>
+    
+                    <!-- RESULTS AREA -->
+                    <VBox fx:id="scanResultsContainer" visible="false" spacing="0" maxWidth="700" style="-fx-background-color: white; -fx-background-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 15, 0, 0, 8); -fx-overflow: hidden; -fx-border-color: #e0e6ed; -fx-border-width: 1; -fx-border-radius: 20;">
+                        <HBox alignment="CENTER_LEFT" spacing="15" style="-fx-background-color: #f8fafc; -fx-padding: 25; -fx-background-radius: 20 20 0 0; -fx-border-color: transparent transparent #e2e8f0 transparent; -fx-border-width: 1;">
+                            <Label text="📑" style="-fx-font-size: 28;" />
+                            <VBox>
+                                <Label text="Analyse IA Terminée" style="-fx-font-size: 22; -fx-font-weight: bold; -fx-text-fill: #1a237e;" />
+                                <Label text="Extraction intelligente des données d'audit" style="-fx-font-size: 13; -fx-text-fill: #64748b;" />
+                            </VBox>
+                        </HBox>
+                        
+                        <VBox spacing="20" style="-fx-padding: 30;">
+                            <VBox fx:id="vboxPointsCles" spacing="15" />
+                            <Region prefHeight="10" />
+                            <HBox spacing="15" alignment="CENTER_RIGHT">
+                                <Button onAction="#handleGenererRapportDepuisScan" text="✨ Créer le Rapport" style="-fx-background-color: #3b82f6; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 12 25; -fx-background-radius: 30; -fx-cursor: hand;" />
+                                <Button text="Ignorer" onAction="#showDashboard" style="-fx-background-color: transparent; -fx-text-fill: #94a3b8; -fx-font-weight: bold; -fx-cursor: hand;" />
+                            </HBox>
+                        </VBox>
+                    </VBox>
+                </VBox>
+            </ScrollPane>
+
+            <!-- CELEBRATION OVERLAY -->
+            <Pane fx:id="paneCelebration" mouseTransparent="true" pickOnBounds="false" />
+        </StackPane>
+    </HBox>
+
+    <!-- FOOTER -->
+    <HBox alignment="CENTER_LEFT" spacing="20" styleClass="footer" style="-fx-padding: 10 20;">
+        <Region HBox.hgrow="ALWAYS" />
+        <Label style="-fx-text-fill: #95a5a6; -fx-font-size: 11px;" text="AuditAI Client Analytics v3.0" />
+    </HBox>
+
+</VBox>

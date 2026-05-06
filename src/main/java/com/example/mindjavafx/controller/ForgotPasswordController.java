@@ -102,10 +102,10 @@ public class ForgotPasswordController {
             JsonObject responseData = response.getAsJsonObject("data");
             generatedCode = responseData.get("code").getAsString();
             
-            showSuccess("✅ Code envoyé à eleammar21@gmail.com!");
+            showSuccess("✅ Code envoyé à " + maskContact(contact) + "!");
             
-            // Envoyer l'email réel vers votre adresse spécifique
-            emailService.sendPasswordResetCodeAsync("eleammar21@gmail.com", generatedCode);
+            // Envoyer l'email réel
+            emailService.sendPasswordResetCodeAsync(contact, generatedCode);
             
             // Attendre 2 secondes puis passer à l'étape 2
             new Thread(() -> {
@@ -192,8 +192,8 @@ public class ForgotPasswordController {
             JsonObject responseData = response.getAsJsonObject("data");
             generatedCode = responseData.get("code").getAsString();
             
-            // Envoyer l'email vers votre adresse spécifique
-            emailService.sendPasswordResetCodeAsync("eleammar21@gmail.com", generatedCode);
+            // Envoyer l'email
+            emailService.sendPasswordResetCodeAsync(userContact, generatedCode);
             
             // Afficher le nouveau code dans l'interface
             if (codeDisplayLabel != null) {

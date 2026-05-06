@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" prefWidth="500" style="-fx-background-color: white; -fx-padding: 30;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.audit.auditaifx.controller.ScoreModalController">
+    
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #1a237e;" text="Analyse de Performance AI" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Label fx:id="lblScoreGlobal" styleClass="score-badge-large" text="0.0" />
+    </HBox>
+
+    <Separator />
+
+    <VBox spacing="15">
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Complétude" style="-fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblValCompletude" text="0/10" />
+            </HBox>
+            <ProgressBar fx:id="progressCompletude" prefWidth="Infinity" progress="0.0" styleClass="progress-dimension" />
+        </VBox>
+
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Conformité" style="-fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblValConformite" text="0/10" />
+            </HBox>
+            <ProgressBar fx:id="progressConformite" prefWidth="Infinity" progress="0.0" styleClass="progress-dimension" />
+        </VBox>
+
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Documentation" style="-fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblValDocumentation" text="0/10" />
+            </HBox>
+            <ProgressBar fx:id="progressDocumentation" prefWidth="Infinity" progress="0.0" styleClass="progress-dimension" />
+        </VBox>
+
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Suivi" style="-fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblValSuivi" text="0/10" />
+            </HBox>
+            <ProgressBar fx:id="progressSuivi" prefWidth="Infinity" progress="0.0" styleClass="progress-dimension" />
+        </VBox>
+
+        <VBox spacing="5">
+            <HBox alignment="CENTER_LEFT">
+                <Label text="Réactivité" style="-fx-font-weight: bold;" />
+                <Region HBox.hgrow="ALWAYS" />
+                <Label fx:id="lblValReactivite" text="0/10" />
+            </HBox>
+            <ProgressBar fx:id="progressReactivite" prefWidth="Infinity" progress="0.0" styleClass="progress-dimension" />
+        </VBox>
+    </VBox>
+
+    <VBox spacing="10" style="-fx-background-color: #f8f9fa; -fx-padding: 15; -fx-background-radius: 8; -fx-border-color: #e9ecef; -fx-border-radius: 8;">
+        <Label text="💡 Verdict de l'IA" style="-fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+        <Label fx:id="lblVerdict" wrapText="true" style="-fx-font-size: 13px; -fx-text-fill: #34495e;" text="Analyse en cours..." />
+    </VBox>
+
+    <HBox alignment="CENTER">
+        <Button onAction="#fermer" prefWidth="120" style="-fx-background-color: #1a237e; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 20; -fx-cursor: hand;" text="Fermer" />
+    </HBox>
+
+</VBox>

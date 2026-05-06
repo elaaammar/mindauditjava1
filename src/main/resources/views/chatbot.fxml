@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.web.WebView?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.gestionaudit.controllers.ChatbotController"
+      spacing="20" styleClass="main-container" stylesheets="/styles/modern.css">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <VBox>
+        <Label text="Assistant Gestion Audit AI" styleClass="header-title"/>
+        <Label text="Posez vos questions sur vos réclamations" styleClass="subtitle"/>
+    </VBox>
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="chat-container">
+        <padding>
+            <Insets top="15" right="15" bottom="15" left="15"/>
+        </padding>
+        <VBox fx:id="chatHistory" spacing="15"/>
+    </ScrollPane>
+
+    <HBox spacing="10" alignment="CENTER">
+        <padding>
+            <Insets top="0" right="24" bottom="0" left="0"/>
+        </padding>
+        <TextField fx:id="messageField" HBox.hgrow="ALWAYS" promptText="Écrivez votre message ici..." styleClass="text-field" onAction="#handleSend"/>
+        <Button fx:id="btnMic" text="🎤" onAction="#toggleRecording" styleClass="btn, btn-outline" style="-fx-font-size: 18px;"/>
+        <Button text="Envoyer" onAction="#handleSend" styleClass="btn, btn-primary"/>
+    </HBox>
+
+
+</VBox>

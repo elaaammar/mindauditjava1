@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane fitToWidth="true" style="-fx-background-color: transparent;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    <VBox spacing="25" style="-fx-padding: 30; -fx-background-color: #f4f7f6;">
+        
+        <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+            <Label text="📈 Analyses de Performance" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Consultez l'évolution de vos scores et la répartition de vos tâches." style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;"/>
+        </VBox>
+
+        <HBox spacing="20">
+            <!-- Score Evolution -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+                <Label text="Évolution Globale des Scores" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                <LineChart prefHeight="350">
+                    <xAxis><CategoryAxis label="Semaine"/></xAxis>
+                    <yAxis><NumberAxis label="Score %" lowerBound="0" upperBound="100"/></yAxis>
+                </LineChart>
+            </VBox>
+
+            <!-- Task Distribution -->
+            <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" prefWidth="400">
+                <Label text="Répartition par Catégorie" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+                <PieChart prefHeight="350" legendVisible="true"/>
+            </VBox>
+        </HBox>
+
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+            <Label text="Détails par Mois" style="-fx-font-weight: bold; -fx-text-fill: #34495e;"/>
+            <BarChart prefHeight="300">
+                <xAxis><CategoryAxis label="Mois"/></xAxis>
+                <yAxis><NumberAxis label="Audits"/></yAxis>
+            </BarChart>
+        </VBox>
+
+    </VBox>
+</ScrollPane>

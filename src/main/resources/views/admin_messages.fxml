@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<SplitPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.gestionaudit.controllers.AdminMessagesController"
+           dividerPositions="0.35"
+           styleClass="messages-shell"
+           stylesheets="/styles/modern.css">
+
+    <VBox spacing="14" styleClass="inbox-panel">
+        <padding>
+            <Insets top="20" right="18" bottom="18" left="18"/>
+        </padding>
+        <Label text="Boîte de réception" styleClass="inbox-title"/>
+        <TextField fx:id="searchField" promptText="Rechercher un client…" onKeyReleased="#handleSearch" styleClass="text-field"/>
+        <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-clean">
+            <VBox fx:id="inboxContainer" spacing="10"/>
+        </ScrollPane>
+    </VBox>
+
+    <StackPane fx:id="chatArea" styleClass="chat-pane">
+        <VBox alignment="CENTER" spacing="12">
+            <Label text="Sélectionnez une conversation" styleClass="empty-state-title"/>
+            <Label text="Choisissez une conversation à gauche pour ouvrir le chat." styleClass="empty-state-sub"/>
+        </VBox>
+    </StackPane>
+
+</SplitPane>

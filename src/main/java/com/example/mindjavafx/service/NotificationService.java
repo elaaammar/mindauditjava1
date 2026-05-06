@@ -144,6 +144,19 @@ public class NotificationService {
         return -1;
     }
 
+    public boolean deleteConnectionAlerts() {
+        String query = "DELETE FROM notification WHERE title = 'Alerte de Connexion'";
+        try (Connection conn = com.example.mindjavafx.util.DatabaseConnection.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            int rows = stmt.executeUpdate();
+            System.out.println("[DEBUG] " + rows + " alertes de connexion supprimées.");
+            return rows > 0;
+        } catch (SQLException e) {
+            System.err.println("Error deleting alerts: " + e.getMessage());
+            return false;
+        }
+    }
+
     /**
      * Generate notifications for recommendations
      */

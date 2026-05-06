@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.gestionaudit.controllers.ReclamationFormController"
+      prefWidth="520" prefHeight="650" styleClass="main-container" stylesheets="/styles/modern.css">
+    
+    <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-clean">
+        <VBox spacing="15">
+            <padding>
+                <Insets top="24" right="24" bottom="24" left="24"/>
+            </padding>
+
+            <Label text="Formulaire de Réclamation" styleClass="header"/>
+
+            <GridPane hgap="10" vgap="15">
+                <columnConstraints>
+                    <ColumnConstraints minWidth="100"/>
+                    <ColumnConstraints hgrow="ALWAYS"/>
+                </columnConstraints>
+
+                <Label text="Titre *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="0">
+                    <TextField fx:id="titreField" promptText="Sujet de votre réclamation"/>
+                    <Label fx:id="errorTitre" style="-fx-text-fill: #ef4444; -fx-font-size: 11px;" visible="false" managed="false"/>
+                </VBox>
+
+                <Label text="Description *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <TextArea fx:id="descriptionArea" promptText="Décrivez votre problème en détail" prefHeight="100"/>
+                    <Label fx:id="errorDescription" style="-fx-text-fill: #ef4444; -fx-font-size: 11px;" visible="false" managed="false"/>
+                </VBox>
+
+                <Label text="Priorité" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+                <ComboBox fx:id="prioriteCombo" maxWidth="Infinity" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+                <Label text="Catégorie" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+                <TextField fx:id="categorieField" promptText="Ex: Technique, Facturation..." GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+                <Label text="Nom" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+                <TextField fx:id="nomField" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+                <Label text="Email *" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+                <VBox GridPane.columnIndex="1" GridPane.rowIndex="5">
+                    <TextField fx:id="emailField"/>
+                    <Label fx:id="errorEmail" style="-fx-text-fill: #ef4444; -fx-font-size: 11px;" visible="false" managed="false"/>
+                </VBox>
+
+                <Label text="Téléphone" styleClass="form-label" GridPane.columnIndex="0" GridPane.rowIndex="6"/>
+                <TextField fx:id="telephoneField" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+            </GridPane>
+
+            <VBox alignment="CENTER" spacing="10">
+                <Label text="QR Code de la Réclamation" styleClass="form-label"/>
+                <ImageView fx:id="qrImageView" fitHeight="150" fitWidth="150" preserveRatio="true"/>
+                <Button text="Générer QR" onAction="#handleGenerateQR" styleClass="btn"/>
+            </VBox>
+
+            <HBox spacing="10" alignment="CENTER_RIGHT">
+                <Button text="Annuler" onAction="#handleCancel" styleClass="btn"/>
+                <Button fx:id="submitButton" text="Envoyer" onAction="#handleSubmit" styleClass="btn, btn-success"/>
+            </HBox>
+        </VBox>
+    </ScrollPane>
+
+</VBox>

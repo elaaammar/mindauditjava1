@@ -1,0 +1,134 @@
+{
+  "info": {
+    "name": "MindAudit API - Mot de passe oublié",
+    "description": "Collection Postman pour tester l'API de réinitialisation de mot de passe",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Envoyer code de vérification",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contact\": \"admin@mindaudit.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/forgot-password/send-code",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "forgot-password", "send-code"]
+        },
+        "description": "Envoie un code de vérification à 6 chiffres par email ou SMS"
+      },
+      "response": []
+    },
+    {
+      "name": "2. Vérifier le code",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contact\": \"admin@mindaudit.com\",\n  \"code\": \"123456\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/forgot-password/verify-code",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "forgot-password", "verify-code"]
+        },
+        "description": "Vérifie que le code saisi est correct"
+      },
+      "response": []
+    },
+    {
+      "name": "3. Réinitialiser mot de passe",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contact\": \"admin@mindaudit.com\",\n  \"code\": \"123456\",\n  \"newPassword\": \"nouveauPass123\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/forgot-password/reset",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "forgot-password", "reset"]
+        },
+        "description": "Réinitialise le mot de passe avec le code vérifié"
+      },
+      "response": []
+    },
+    {
+      "name": "4. Renvoyer un nouveau code",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contact\": \"admin@mindaudit.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/forgot-password/resend-code",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "forgot-password", "resend-code"]
+        },
+        "description": "Génère et envoie un nouveau code de vérification"
+      },
+      "response": []
+    },
+    {
+      "name": "Test avec téléphone",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"contact\": \"0612345678\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/forgot-password/send-code",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8080",
+          "path": ["api", "forgot-password", "send-code"]
+        },
+        "description": "Test avec un numéro de téléphone au lieu d'un email"
+      },
+      "response": []
+    }
+  ]
+}

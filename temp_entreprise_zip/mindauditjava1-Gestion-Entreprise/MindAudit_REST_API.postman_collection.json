@@ -1,0 +1,215 @@
+{
+  "info": {
+    "name": "MindAudit REST API",
+    "description": "Collection complète pour tester l'API REST MindAudit",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Authentification",
+      "item": [
+        {
+          "name": "Login",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@mindaudit.com\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9000/api/auth/login",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Current User",
+          "request": {
+            "method": "GET",
+            "header": [{"key": "Authorization", "value": "token_xxx"}],
+            "url": {
+              "raw": "http://localhost:9000/api/auth/current",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "auth", "current"]
+            }
+          }
+        },
+        {
+          "name": "Logout",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Authorization", "value": "token_xxx"}],
+            "url": {
+              "raw": "http://localhost:9000/api/auth/logout",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "auth", "logout"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Utilisateurs",
+      "item": [
+        {
+          "name": "Liste tous les utilisateurs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Un utilisateur par ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Créer un utilisateur",
+          "request": {
+            "method": "POST",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Test User\",\n  \"email\": \"test@example.com\",\n  \"age\": 25,\n  \"actif\": true,\n  \"telephone\": \"0612345678\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9000/api/users",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "users"]
+            }
+          }
+        },
+        {
+          "name": "Modifier un utilisateur",
+          "request": {
+            "method": "PUT",
+            "header": [{"key": "Content-Type", "value": "application/json"}],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nom\": \"Test User Updated\",\n  \"email\": \"test@example.com\",\n  \"age\": 26,\n  \"actif\": true,\n  \"telephone\": \"0612345678\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:9000/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "users", "1"]
+            }
+          }
+        },
+        {
+          "name": "Supprimer un utilisateur",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:9000/api/users/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "users", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Statistiques",
+      "item": [
+        {
+          "name": "Total utilisateurs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/stats/total",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "stats", "total"]
+            }
+          }
+        },
+        {
+          "name": "Utilisateurs actifs",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/stats/active",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "stats", "active"]
+            }
+          }
+        },
+        {
+          "name": "Distribution par rôle",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/stats/roles",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "stats", "roles"]
+            }
+          }
+        },
+        {
+          "name": "Toutes les statistiques",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/stats/all",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "stats", "all"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Test",
+      "item": [
+        {
+          "name": "Ping",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:9000/api/ping",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "9000",
+              "path": ["api", "ping"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

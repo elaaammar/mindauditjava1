@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.geometry.Insets?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+           fx:controller="com.example.mindjavafx.controller.SplashController"
+           style="-fx-background-color: linear-gradient(to bottom right, #87CEEB, #4A90E2);">
+    
+    <VBox alignment="CENTER" spacing="30" style="-fx-padding: 60;">
+        
+        <!-- Logo et titre -->
+        <VBox alignment="CENTER" spacing="15">
+            <ImageView fitWidth="600" fitHeight="600" preserveRatio="true">
+                <image>
+                    <Image url="@../images/audit.webp"/>
+                </image>
+            </ImageView>
+            <Label text="MindAudit" style="-fx-font-size: 48; -fx-font-weight: bold; -fx-text-fill: white;"/>
+            <Label text="Système de Gestion d'Audit Interne d'une entreprise" style="-fx-font-size: 18; -fx-text-fill: white; -fx-opacity: 0.9;"/>
+        </VBox>
+        
+        <!-- Barre de progression -->
+        <VBox alignment="CENTER" spacing="15" style="-fx-padding: 40 0 0 0;">
+            <ProgressBar fx:id="progressBar" prefWidth="300" prefHeight="8" 
+                        style="-fx-accent: white;"/>
+            <Label fx:id="loadingLabel" text="Chargement des modules..." 
+                   style="-fx-text-fill: white; -fx-font-size: 14; -fx-opacity: 0.8;"/>
+        </VBox>
+        
+        <!-- Informations -->
+        <VBox alignment="CENTER" spacing="8" style="-fx-padding: 40 0 0 0;">
+            <Label text="Audit • Conformite • Controle" style="-fx-text-fill: white; -fx-font-size: 14; -fx-font-weight: bold;"/>
+            <Label text="Version 1.0" style="-fx-text-fill: white; -fx-font-size: 12; -fx-opacity: 0.7;"/>
+        </VBox>
+        
+    </VBox>
+    
+</StackPane>

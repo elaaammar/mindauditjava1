@@ -310,18 +310,38 @@ public class EntrepriseController {
         FileChooser fc = new FileChooser();
         fc.setTitle("Enregistrer le PDF");
         fc.getExtensionFilters().add(new FileChooser.ExtensionFilter("PDF", "*.pdf"));
-        fc.setInitialFileName("entreprises.pdf");
-        File file = fc.showSaveDialog(tableEntreprises.getScene().getWindow());
+        
+        // Définir le répertoire initial sur Téléchargements
+        File downloadsDir = new File(System.getProperty("user.home") + File.separator + "Downloads");
+        if (!downloadsDir.exists()) downloadsDir = new File(System.getProperty("user.home"));
+        fc.setInitialDirectory(downloadsDir);
+        
+        // Nom du fichier basé sur l'entreprise sélectionnée
+        Entreprise sel = tableEntreprises.getSelectionModel().getSelectedItem();
+        if (sel != null) {
+            fc.setInitialFileName("Entreprise_" + sel.getNom().replaceAll("[^a-zA-Z0-9]", "_") + ".pdf");
+        } else {
+            fc.setInitialFileName("Liste_Entreprises.pdf");
+        }
+        
+        // Get the window safely
+        javafx.stage.Window window = null;
+        try {
+            if (tableEntreprises != null && tableEntreprises.getScene() != null) {
+                window = tableEntreprises.getScene().getWindow();
+            }
+        } catch (Exception ignored) {}
+        
+        File file = fc.showSaveDialog(window);
         if (file == null) return;
         try {
-            Entreprise sel = tableEntreprises.getSelectionModel().getSelectedItem();
             if (sel != null) {
                 List<Document> docs = docService.findByEntrepriseId(sel.getId());
                 PdfExporter.exportEntreprise(sel, docs, file.getAbsolutePath());
             } else {
                 PdfExporter.exportListeEntreprises(sortedList, file.getAbsolutePath());
             }
-            UiHelper.showAlert("Export réussi", "PDF généré : " + file.getAbsolutePath(), Alert.AlertType.INFORMATION);
+            UiHelper.showAlert("Export réussi", "✅ PDF enregistré dans :\n" + file.getAbsolutePath(), Alert.AlertType.INFORMATION);
         } catch (Exception ex) {
             UiHelper.showAlert("Erreur PDF", "Impossible de générer le PDF : " + ex.getMessage(), Alert.AlertType.ERROR);
         }
@@ -581,7 +601,7 @@ public class EntrepriseController {
         root.setAlignment(Pos.TOP_CENTER);
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/com/gestion/css/style.css").toExternalForm());
+        // Apply styles inline without external CSS dependency
         dialog.setScene(scene);
         dialog.show();
 

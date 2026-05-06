@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.audit.auditaifx.controller.RecoFormController"
+      spacing="12" style="-fx-background-color: #f8fafc; -fx-padding: 25;"
+      stylesheets="@audit.css">
+
+    <!-- TITRE -->
+    <Label text="📌 Recommandation"
+           style="-fx-font-size: 16; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+    <Separator/>
+
+    <!-- DESCRIPTION -->
+    <VBox spacing="3">
+        <Label text="Description *" style="-fx-font-weight: bold;"/>
+        <TextArea fx:id="txtDescription"
+                  promptText="Décrivez la recommandation (min. 10 caractères)..."
+                  prefHeight="100" wrapText="true"/>
+        <Label fx:id="lblErreurDescription"
+               style="-fx-text-fill: #e74c3c; -fx-font-size: 11;"/>
+    </VBox>
+
+    <!-- PRIORITE -->
+    <VBox spacing="3">
+        <Label text="Priorité *" style="-fx-font-weight: bold;"/>
+        <ComboBox fx:id="cmbPriorite" prefWidth="200"/>
+        <Label fx:id="lblErreurPriorite"
+               style="-fx-text-fill: #e74c3c; -fx-font-size: 11;"/>
+    </VBox>
+
+    <!-- RESOLUE -->
+    <CheckBox fx:id="chkResolue" text="✅ Recommandation résolue"/>
+
+    <Separator/>
+
+    <!-- BOUTONS -->
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="Annuler" onAction="#annuler"
+                style="-fx-background-color: #95a5a6; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-background-radius: 5;
+                       -fx-padding: 8 20 8 20;"/>
+        <Button text="💾 Sauvegarder" onAction="#sauvegarder"
+                style="-fx-background-color: #2980b9; -fx-text-fill: white;
+                       -fx-font-weight: bold; -fx-background-radius: 5;
+                       -fx-padding: 8 20 8 20;"/>
+    </HBox>
+
+</VBox>

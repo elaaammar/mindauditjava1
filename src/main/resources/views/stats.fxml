@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+            fx:controller="com.gestionaudit.controllers.StatsController"
+            fitToWidth="true" style="-fx-background-color: transparent; -fx-background: transparent;">
+
+    <VBox spacing="20" styleClass="main-container" stylesheets="/styles/modern.css" style="-fx-background-color: transparent;">
+        <padding>
+            <Insets top="10" right="10" bottom="10" left="10"/>
+        </padding>
+
+        <Label text="Tableau de Bord &amp; Analytiques" styleClass="header-title"/>
+        <Label text="Vue d'ensemble sur 5 dimensions" styleClass="subtitle"/>
+
+        <FlowPane hgap="20" vgap="20" alignment="CENTER">
+            <!-- 1. Pie Chart - Status -->
+            <VBox styleClass="stat-card" alignment="CENTER">
+                <Label text="Répartition par Statut" styleClass="stat-label"/>
+                <PieChart fx:id="statusPieChart" prefWidth="350" prefHeight="300" legendSide="BOTTOM"/>
+            </VBox>
+
+            <!-- 2. Bar Chart - Priority -->
+            <VBox styleClass="stat-card" alignment="CENTER">
+                <Label text="Répartition par Priorité" styleClass="stat-label"/>
+                <BarChart fx:id="priorityBarChart" prefWidth="350" prefHeight="300" legendVisible="false">
+                    <xAxis><CategoryAxis fx:id="priorityXAxis"/></xAxis>
+                    <yAxis><NumberAxis fx:id="priorityYAxis"/></yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- 3. Bar Chart - Categories -->
+            <VBox styleClass="stat-card" alignment="CENTER">
+                <Label text="Tendances par Catégorie" styleClass="stat-label"/>
+                <BarChart fx:id="categoryBarChart" prefWidth="350" prefHeight="300" legendVisible="false">
+                    <xAxis><CategoryAxis/></xAxis>
+                    <yAxis><NumberAxis/></yAxis>
+                </BarChart>
+            </VBox>
+
+            <!-- 4. Line Chart - Flow over time -->
+            <VBox styleClass="stat-card" alignment="CENTER" prefWidth="540">
+                <Label text="Flux Quotidien" styleClass="stat-label"/>
+                <LineChart fx:id="timelineLineChart" prefHeight="300" legendVisible="false">
+                    <xAxis><CategoryAxis fx:id="timelineXAxis"/></xAxis>
+                    <yAxis><NumberAxis fx:id="timelineYAxis"/></yAxis>
+                </LineChart>
+            </VBox>
+
+            <!-- 5. Area Chart - Cumulative -->
+            <VBox styleClass="stat-card" alignment="CENTER" prefWidth="540">
+                <Label text="Évolution Cumulative Globale" styleClass="stat-label"/>
+                <AreaChart fx:id="cumulativeAreaChart" prefHeight="300" legendVisible="false">
+                    <xAxis><CategoryAxis/></xAxis>
+                    <yAxis><NumberAxis/></yAxis>
+                </AreaChart>
+            </VBox>
+            
+        </FlowPane>
+    </VBox>
+</ScrollPane>

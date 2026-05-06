@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.gestionaudit.controllers.AdminMainController"
+      spacing="20" stylesheets="/styles/modern.css" styleClass="main-container, admin-main-container">
+
+    <HBox spacing="15" alignment="CENTER_LEFT">
+        <VBox>
+            <Label text="Gestion des Réclamations" styleClass="header-title"/>
+            <Label text="Vues en cartes - Gérez les plaintes client" styleClass="subtitle"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="15" alignment="CENTER_LEFT" styleClass="premium-card admin-toolbar">
+        <TextField fx:id="searchField" promptText="Rechercher par titre ou nom..." onKeyReleased="#handleSearch" prefWidth="300" styleClass="text-field"/>
+        <ComboBox fx:id="statusFilter" promptText="Filtrer par statut" onAction="#handleSearch" styleClass="combo-box"/>
+    </HBox>
+
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="scroll-clean">
+        <VBox fx:id="reclamationContainer" spacing="15" alignment="TOP_CENTER">
+            <!-- Cards will be dynamically loaded here -->
+        </VBox>
+    </ScrollPane>
+
+</VBox>

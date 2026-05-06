@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="25" style="-fx-padding: 30; -fx-background-color: #f4f7f6;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+    
+    <VBox spacing="5" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <Label text="📄 Rapports d'Audit" style="-fx-font-size: 24; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="Accédez à vos rapports PDF générés." style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;"/>
+    </VBox>
+
+    <GridPane hgap="20" vgap="20">
+        <!-- Report Card 1 -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="250">
+            <Label text="📕" style="-fx-font-size: 40;"/>
+            <Label text="Rapport Annuel 2023" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label text="PDF • 2.4 MB" style="-fx-text-fill: #95a5a6; -fx-font-size: 11;"/>
+            <Button text="Télécharger" maxWidth="Infinity" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;"/>
+        </VBox>
+
+        <!-- Report Card 2 -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="250">
+            <Label text="📙" style="-fx-font-size: 40;"/>
+            <Label text="Audit Sécurité Q4" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label text="PDF • 1.8 MB" style="-fx-text-fill: #95a5a6; -fx-font-size: 11;"/>
+            <Button text="Télécharger" maxWidth="Infinity" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;"/>
+        </VBox>
+
+        <!-- Report Card 3 -->
+        <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 20; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.05), 5, 0, 0, 2);" GridPane.columnIndex="2" GridPane.rowIndex="0" prefWidth="250">
+            <Label text="📗" style="-fx-font-size: 40;"/>
+            <Label text="Synthèse Conformité" style="-fx-font-weight: bold; -fx-font-size: 14;"/>
+            <Label text="PDF • 3.1 MB" style="-fx-text-fill: #95a5a6; -fx-font-size: 11;"/>
+            <Button text="Télécharger" maxWidth="Infinity" style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-cursor: hand;"/>
+        </VBox>
+    </GridPane>
+
+</VBox>

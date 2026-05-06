@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox alignment="CENTER" prefHeight="600.0" prefWidth="900.0" spacing="30.0" style="-fx-background-color: #2c3e50;" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controlleur.PerformAuditController">
+   <children>
+      <VBox alignment="CENTER" spacing="10.0" styleClass="glass-pane" VBox.vgrow="NEVER">
+         <children>
+            <Label fx:id="lblReportTitle" text="Report: Security Audit" textFill="WHITE">
+               <font>
+                  <Font name="System Bold" size="24.0" />
+               </font>
+            </Label>
+            <HBox alignment="CENTER" spacing="15.0">
+               <children>
+                  <Label fx:id="lblProgress" text="Question 1 of 5" textFill="#bdc3c7" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <Label fx:id="lblTimer" text="⏱ 00:00" textFill="#e74c3c" style="-fx-font-weight: bold; -fx-font-size: 18px;" />
+               </children>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+      </VBox>
+      <VBox alignment="TOP_CENTER" spacing="20.0" styleClass="glass-pane" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="lblQuestion" text="Is the security protocol followed correctly in all departments?" textFill="WHITE" wrapText="true">
+               <font>
+                  <Font size="20.0" />
+               </font>
+               <VBox.margin>
+                  <Insets bottom="20.0" top="20.0" />
+               </VBox.margin>
+            </Label>
+            <TextArea fx:id="taAnswer" prefHeight="150.0" prefWidth="600.0" promptText="Enter your findings here..." style="-fx-background-radius: 10; -fx-padding: 10;">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </TextArea>
+            <HBox alignment="CENTER" spacing="20.0">
+               <children>
+                  <Button fx:id="btnPrev" mnemonicParsing="false" onAction="#handlePrevious" prefWidth="120.0" styleClass="btn-secondary" text="⬅ Previous" />
+                  <Button fx:id="btnSaveNext" mnemonicParsing="false" onAction="#handleSaveNext" prefWidth="120.0" styleClass="btn-primary" text="Save &amp; Next ➡" />
+               </children>
+               <VBox.margin>
+                  <Insets top="20.0" />
+               </VBox.margin>
+            </HBox>
+         </children>
+         <padding>
+            <Insets bottom="40.0" left="40.0" right="40.0" top="40.0" />
+         </padding>
+      </VBox>
+      <HBox alignment="CENTER" spacing="10.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#handleBackToDashboard" styleClass="btn-danger" text="Cancel Session" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="btnFinish" mnemonicParsing="false" onAction="#handleFinish" styleClass="btn-primary" style="-fx-background-color: #27ae60;" text="✔ Finish Audit" />
+         </children>
+         <padding>
+            <Insets bottom="20.0" left="40.0" right="40.0" top="20.0" />
+         </padding>
+      </HBox>
+   </children>
+   <padding>
+      <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+   </padding>
+</VBox>

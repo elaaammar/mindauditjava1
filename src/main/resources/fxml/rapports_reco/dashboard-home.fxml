@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.geometry.Insets?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.example.mindjavafx.controller.DashboardHomeController"
+            fitToWidth="true" fitToHeight="true" style="-fx-background-color: transparent;">
+
+<VBox spacing="25" style="-fx-padding: 25;">
+
+    <!-- HEADER -->
+    <VBox spacing="10" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <Label text="🏠 Dashboard Admin" style="-fx-font-size: 26; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="Vue d'ensemble de la gestion des utilisateurs" style="-fx-font-size: 13; -fx-text-fill: #7f8c8d;"/>
+    </VBox>
+
+    <!-- 1. CARTES STATISTIQUES -->
+    <GridPane hgap="20" vgap="20">
+        <!-- Total Utilisateurs -->
+        <VBox spacing="15" style="-fx-background-color: linear-gradient(to bottom right, #667eea, #764ba2); -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);" 
+              GridPane.rowIndex="0" GridPane.columnIndex="0" prefWidth="260" prefHeight="150">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="👥" style="-fx-font-size: 40;"/>
+                <VBox spacing="5">
+                    <Label text="Total Utilisateurs" style="-fx-font-size: 12; -fx-text-fill: white; -fx-opacity: 0.9;"/>
+                    <Label fx:id="totalUsersLabel" text="0" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </VBox>
+            </HBox>
+            <Label text="Tous les comptes" style="-fx-font-size: 11; -fx-text-fill: white; -fx-opacity: 0.8;"/>
+        </VBox>
+
+        <!-- Utilisateurs Actifs -->
+        <VBox spacing="15" style="-fx-background-color: linear-gradient(to bottom right, #11998e, #38ef7d); -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);" 
+              GridPane.rowIndex="0" GridPane.columnIndex="1" prefWidth="260" prefHeight="150">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="🟢" style="-fx-font-size: 40;"/>
+                <VBox spacing="5">
+                    <Label text="Utilisateurs Actifs" style="-fx-font-size: 12; -fx-text-fill: white; -fx-opacity: 0.9;"/>
+                    <Label fx:id="activeUsersLabel" text="0" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </VBox>
+            </HBox>
+            <Label text="Comptes actifs" style="-fx-font-size: 11; -fx-text-fill: white; -fx-opacity: 0.8;"/>
+        </VBox>
+
+        <!-- Utilisateurs Bloqués -->
+        <VBox spacing="15" style="-fx-background-color: linear-gradient(to bottom right, #eb3349, #f45c43); -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);" 
+              GridPane.rowIndex="0" GridPane.columnIndex="2" prefWidth="260" prefHeight="150">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="🔴" style="-fx-font-size: 40;"/>
+                <VBox spacing="5">
+                    <Label text="Utilisateurs Bloqués" style="-fx-font-size: 12; -fx-text-fill: white; -fx-opacity: 0.9;"/>
+                    <Label fx:id="blockedUsersLabel" text="0" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </VBox>
+            </HBox>
+            <Label text="Comptes inactifs" style="-fx-font-size: 11; -fx-text-fill: white; -fx-opacity: 0.8;"/>
+        </VBox>
+
+        <!-- Nouveaux Utilisateurs -->
+        <VBox spacing="15" style="-fx-background-color: linear-gradient(to bottom right, #4facfe, #00f2fe); -fx-padding: 25; -fx-background-radius: 15; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 15, 0, 0, 5);" 
+              GridPane.rowIndex="0" GridPane.columnIndex="3" prefWidth="260" prefHeight="150">
+            <HBox spacing="15" alignment="CENTER_LEFT">
+                <Label text="🆕" style="-fx-font-size: 40;"/>
+                <VBox spacing="5">
+                    <Label text="Nouveaux (7j)" style="-fx-font-size: 12; -fx-text-fill: white; -fx-opacity: 0.9;"/>
+                    <Label fx:id="newUsersLabel" text="0" style="-fx-font-size: 36; -fx-font-weight: bold; -fx-text-fill: white;"/>
+                </VBox>
+            </HBox>
+            <Label text="Cette semaine" style="-fx-font-size: 11; -fx-text-fill: white; -fx-opacity: 0.8;"/>
+        </VBox>
+    </GridPane>
+
+    <!-- 2. GRAPHIQUE + APERÇU RÔLES -->
+    <HBox spacing="20">
+        <!-- Mini Graphique -->
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+            <Label text="📈 Évolution des Inscriptions" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Derniers 7 jours" style="-fx-font-size: 12; -fx-text-fill: #7f8c8d;"/>
+            <LineChart fx:id="registrationChart" prefHeight="200" animated="true" legendVisible="false">
+                <xAxis>
+                    <CategoryAxis side="BOTTOM" />
+                </xAxis>
+                <yAxis>
+                    <NumberAxis side="LEFT" />
+                </yAxis>
+            </LineChart>
+        </VBox>
+
+        <!-- Aperçu des Rôles -->
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" prefWidth="350">
+            <Label text="🔐 Aperçu des Rôles" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Répartition par rôle" style="-fx-font-size: 12; -fx-text-fill: #7f8c8d;"/>
+            
+            <VBox spacing="15" style="-fx-padding: 10 0;">
+                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #e3f2fd; -fx-padding: 15; -fx-background-radius: 8;">
+                    <Label text="👑" style="-fx-font-size: 24;"/>
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label text="Admins" style="-fx-font-size: 12; -fx-text-fill: #1976d2; -fx-font-weight: bold;"/>
+                        <Label text="Administrateurs système" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+                    <Label fx:id="adminCountLabel" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #1976d2;"/>
+                </HBox>
+                
+                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #f3e5f5; -fx-padding: 15; -fx-background-radius: 8;">
+                    <Label text="👤" style="-fx-font-size: 24;"/>
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label text="Users" style="-fx-font-size: 12; -fx-text-fill: #7b1fa2; -fx-font-weight: bold;"/>
+                        <Label text="Utilisateurs standards" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+                    <Label fx:id="userCountLabel" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #7b1fa2;"/>
+                </HBox>
+                
+                <HBox spacing="15" alignment="CENTER_LEFT" style="-fx-background-color: #fff3e0; -fx-padding: 15; -fx-background-radius: 8;">
+                    <Label text="📋" style="-fx-font-size: 24;"/>
+                    <VBox spacing="3" HBox.hgrow="ALWAYS">
+                        <Label text="Auditeurs" style="-fx-font-size: 12; -fx-text-fill: #f57c00; -fx-font-weight: bold;"/>
+                        <Label text="Auditeurs internes" style="-fx-font-size: 10; -fx-text-fill: #7f8c8d;"/>
+                    </VBox>
+                    <Label fx:id="auditeurCountLabel" text="0" style="-fx-font-size: 28; -fx-font-weight: bold; -fx-text-fill: #f57c00;"/>
+                </HBox>
+            </VBox>
+        </VBox>
+    </HBox>
+
+    <!-- 3. DERNIERS UTILISATEURS + ALERTES -->
+    <HBox spacing="20">
+        <!-- Derniers Utilisateurs -->
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" HBox.hgrow="ALWAYS">
+            <Label text="👤 Derniers Utilisateurs Inscrits" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="5 dernières inscriptions" style="-fx-font-size: 12; -fx-text-fill: #7f8c8d;"/>
+            <ListView fx:id="recentUsersListView" prefHeight="200" style="-fx-background-color: #f8f9fa; -fx-border-color: #dee2e6; -fx-border-radius: 8; -fx-background-radius: 8;"/>
+        </VBox>
+
+        <!-- Alertes -->
+        <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);" prefWidth="400">
+            <Label text="⚠️ Alertes & Notifications" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+            <Label text="Événements importants" style="-fx-font-size: 12; -fx-text-fill: #7f8c8d;"/>
+            <ListView fx:id="alertsListView" prefHeight="200" style="-fx-background-color: #fff3cd; -fx-border-color: #ffc107; -fx-border-radius: 8; -fx-background-radius: 8;"/>
+        </VBox>
+    </HBox>
+
+    <!-- 6. ACTIONS RAPIDES -->
+    <VBox spacing="15" style="-fx-background-color: white; -fx-padding: 25; -fx-background-radius: 10; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 10, 0, 0, 2);">
+        <Label text="🚀 Actions Rapides" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
+        <Label text="Accès rapide aux fonctionnalités principales" style="-fx-font-size: 12; -fx-text-fill: #7f8c8d;"/>
+        
+        <HBox spacing="20">
+            <VBox spacing="10" alignment="CENTER" onMouseClicked="#goToUserManagement" style="-fx-background-color: #e3f2fd; -fx-padding: 30; -fx-background-radius: 10; -fx-cursor: hand;" prefWidth="250">
+                <Label text="➕" style="-fx-font-size: 40;"/>
+                <Label text="Ajouter un utilisateur" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #1976d2;"/>
+                <Label text="Créer un nouveau compte" style="-fx-font-size: 11; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            
+            <VBox spacing="10" alignment="CENTER" onMouseClicked="#goToUserManagement" style="-fx-background-color: #f3e5f5; -fx-padding: 30; -fx-background-radius: 10; -fx-cursor: hand;" prefWidth="250">
+                <Label text="🔍" style="-fx-font-size: 40;"/>
+                <Label text="Voir liste utilisateurs" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #7b1fa2;"/>
+                <Label text="Gérer tous les comptes" style="-fx-font-size: 11; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            
+            <VBox spacing="10" alignment="CENTER" onMouseClicked="#goToRolePermission" style="-fx-background-color: #e8f5e9; -fx-padding: 30; -fx-background-radius: 10; -fx-cursor: hand;" prefWidth="250">
+                <Label text="🔐" style="-fx-font-size: 40;"/>
+                <Label text="Gérer rôles" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #388e3c;"/>
+                <Label text="Permissions et accès" style="-fx-font-size: 11; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+            
+            <VBox spacing="10" alignment="CENTER" onMouseClicked="#goToStatistics" style="-fx-background-color: #fff3e0; -fx-padding: 30; -fx-background-radius: 10; -fx-cursor: hand;" prefWidth="250">
+                <Label text="📊" style="-fx-font-size: 40;"/>
+                <Label text="Statistiques" style="-fx-font-size: 14; -fx-font-weight: bold; -fx-text-fill: #f57c00;"/>
+                <Label text="Voir les analyses" style="-fx-font-size: 11; -fx-text-fill: #7f8c8d;"/>
+            </VBox>
+        </HBox>
+    </VBox>
+
+</VBox>
+
+</ScrollPane>

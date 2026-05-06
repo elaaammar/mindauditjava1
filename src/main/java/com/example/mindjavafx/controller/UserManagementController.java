@@ -90,7 +90,7 @@ public class UserManagementController {
         
         // Message visible pour l'utilisateur
         if (successLabel != null) {
-            successLabel.setText("⏳ Chargement des utilisateurs...");
+            successLabel.setText(" Chargement des utilisateurs...");
             successLabel.setStyle("-fx-text-fill: #3498db; -fx-font-weight: bold;");
         }
         
@@ -102,7 +102,7 @@ public class UserManagementController {
         
         // Mettre à jour le message après le chargement
         if (successLabel != null && userList != null) {
-            successLabel.setText("✅ " + userList.size() + " utilisateur(s) chargé(s)");
+            successLabel.setText(" " + userList.size() + " utilisateur(s) chargé(s)");
             successLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
         }
         
@@ -179,7 +179,7 @@ public class UserManagementController {
             
             if (users.isEmpty()) {
                 System.out.println("[ATTENTION] Aucun utilisateur trouvé dans la base de données !");
-                successLabel.setText("⚠️ Aucun utilisateur dans la base de données");
+                successLabel.setText(" Aucun utilisateur dans la base de données");
                 successLabel.setStyle("-fx-text-fill: #f39c12; -fx-font-weight: bold;");
             }
             
@@ -272,7 +272,7 @@ public class UserManagementController {
                 userTable.setItems(userList);
                 userTable.refresh();
                 errorLabel.setText("");
-                successLabel.setText("✅ " + results.size() + " résultat(s) trouvé(s)");
+                successLabel.setText(" " + results.size() + " résultat(s) trouvé(s)");
                 successLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
             }
         } catch (SQLException e) {
@@ -292,7 +292,7 @@ public class UserManagementController {
             userTable.setItems(userList);
             userTable.refresh();
             errorLabel.setText("");
-            successLabel.setText("✅ Table rechargée - Tous les utilisateurs affichés");
+            successLabel.setText(" Table rechargée - Tous les utilisateurs affichés");
             successLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
         } catch (SQLException e) {
             errorLabel.setText("Erreur lors du chargement");
@@ -324,7 +324,7 @@ public class UserManagementController {
     private void handleAddUser() {
         clearFields();
         errorLabel.setText("");
-        successLabel.setText("✏️ Remplissez le formulaire ci-dessous pour ajouter un utilisateur");
+        successLabel.setText(" Remplissez le formulaire ci-dessous pour ajouter un utilisateur");
         successLabel.setStyle("-fx-text-fill: #3498db; -fx-font-weight: bold;");
     }
 
@@ -386,7 +386,7 @@ public class UserManagementController {
         try {
             // Vérifier si l'email existe déjà AVANT d'ajouter
             if (userService.getUserByEmail(email) != null) {
-                errorLabel.setText("❌ Cet email est déjà utilisé par un autre utilisateur");
+                errorLabel.setText(" Cet email est déjà utilisé par un autre utilisateur");
                 successLabel.setText("");
                 return;
             }
@@ -409,17 +409,17 @@ public class UserManagementController {
             int userId = userService.addUser(user);
             
             if (userId > 0) {
-                successLabel.setText("✅ Utilisateur ajouté avec succès!");
+                successLabel.setText(" Utilisateur ajouté avec succès!");
                 successLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
                 errorLabel.setText("");
                 loadUsers();
                 clearFields();
             } else {
-                errorLabel.setText("❌ Erreur lors de l'ajout");
+                errorLabel.setText(" Erreur lors de l'ajout");
             }
         } catch (SQLException e) {
             if (e.getMessage().toLowerCase().contains("duplicate")) {
-                errorLabel.setText("❌ Cet email est déjà utilisé");
+                errorLabel.setText(" Cet email est déjà utilisé");
             } else {
                 errorLabel.setText("Erreur base de données: " + e.getMessage());
             }
@@ -496,7 +496,7 @@ public class UserManagementController {
             }
             
             if (existingUser != null && existingUser.getId() != selectedUser.getId()) {
-                errorLabel.setText("❌ Cet email est déjà utilisé par un autre utilisateur");
+                errorLabel.setText(" Cet email est déjà utilisé par un autre utilisateur");
                 successLabel.setText("");
                 return;
             }
@@ -536,18 +536,18 @@ public class UserManagementController {
             }
 
             if (userService.updateUser(selectedUser)) {
-                successLabel.setText("✅ Utilisateur mis à jour avec succès");
+                successLabel.setText(" Utilisateur mis à jour avec succès");
                 successLabel.setStyle("-fx-text-fill: #27ae60; -fx-font-weight: bold;");
                 errorLabel.setText("");
                 loadUsers();
                 clearFields();
             } else {
-                errorLabel.setText("❌ Erreur lors de la mise à jour");
+                errorLabel.setText(" Erreur lors de la mise à jour");
                 successLabel.setText("");
             }
         } catch (SQLException e) {
             if (e.getMessage().toLowerCase().contains("duplicate")) {
-                errorLabel.setText("❌ Cet email est déjà utilisé par un autre utilisateur");
+                errorLabel.setText(" Cet email est déjà utilisé par un autre utilisateur");
             } else {
                 errorLabel.setText("Erreur base de données: " + e.getMessage());
             }
@@ -591,7 +591,7 @@ public class UserManagementController {
             passwordField.clear();
             
             errorLabel.setText("");
-            successLabel.setText("✏️ Modification de: " + selectedUser.getNom() + " (ID: " + selectedUser.getId() + ")");
+            successLabel.setText(" Modification de: " + selectedUser.getNom() + " (ID: " + selectedUser.getId() + ")");
             successLabel.setStyle("-fx-text-fill: #3498db; -fx-font-weight: bold;");
         }
     }

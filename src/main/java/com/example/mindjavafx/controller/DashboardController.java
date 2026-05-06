@@ -42,6 +42,9 @@ public class DashboardController {
     
     @FXML
     private Button rolePermissionButton;
+    
+    @FXML
+    private Button rapportManagementButton;
 
     @FXML
     private Button dashboardButton;
@@ -51,7 +54,13 @@ public class DashboardController {
 
     @FXML
     private Button settingsButton;
-    
+
+    @FXML
+    private Button auditAnalyticsButton;
+
+    @FXML private Button reclamationManagementButton;
+    @FXML private Button messagesButton;
+
     @FXML private Button notificationButton;
     @FXML private Label notificationBadge;
 
@@ -63,6 +72,13 @@ public class DashboardController {
     public void initialize() {
         userService = new UserService();
         notificationService = new NotificationService();
+        
+        // Nettoyage automatique des "bars" d'alerte de connexion au démarrage
+        try {
+            notificationService.deleteConnectionAlerts();
+        } catch (Exception e) {
+            System.err.println("[Dashboard] Erreur lors du nettoyage auto: " + e.getMessage());
+        }
     }
 
     public void setAuthService(AuthenticationService authService) {
@@ -71,9 +87,16 @@ public class DashboardController {
         configureMenuBasedOnRole();
         updateNotificationBadge();
         
+        // Forcer le badge +1 rouge pour l'alerte de connexion email
+        if (notificationBadge != null) {
+            notificationBadge.setText("+1");
+            notificationBadge.setVisible(true);
+            notificationBadge.setStyle("-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 10px; -fx-padding: 2px 6px; -fx-font-size: 10px; -fx-font-weight: bold;");
+        }
+        
         // On attend que JavaFX soit prêt pour charger le contenu par défaut
         javafx.application.Platform.runLater(() -> {
-            showStatistics();
+            showDashboard();
         });
     }
 
@@ -102,6 +125,14 @@ public class DashboardController {
                     rolePermissionButton.setVisible(false);
                     rolePermissionButton.setManaged(false);
                 }
+                if (reclamationManagementButton != null) {
+                    reclamationManagementButton.setVisible(false);
+                    reclamationManagementButton.setManaged(false);
+                }
+                if (messagesButton != null) {
+                    messagesButton.setVisible(false);
+                    messagesButton.setManaged(false);
+                }
             } else {
                 System.out.println("[DEBUG] Showing all menus for admin user");
             }
@@ -121,6 +152,20 @@ public class DashboardController {
     }
 
     @FXML
+    public void showSettings() {
+        System.out.println("[NAV] Navigation vers Settings...");
+        loadContent("/fxml/settings.fxml");
+        updateActiveButton(settingsButton);
+    }
+
+    @FXML
+    public void showAuditAnalytics() {
+        System.out.println("[NAV] Navigation vers Performance Analytics...");
+        loadContent("/fxml/audit-statistics.fxml");
+        updateActiveButton(auditAnalyticsButton);
+    }
+    
+    @FXML
     public void showStatistics() {
         System.out.println("[NAV] Navigation vers Statistiques...");
         loadContent("/fxml/statistics.fxml");
@@ -129,9 +174,19 @@ public class DashboardController {
     
     @FXML
     public void showDashboard() {
-        System.out.println("[NAV] Navigation vers Dashboard Home...");
-        loadContent("/fxml/dashboard-home.fxml");
+        System.out.println("[NAV] Navigation vers Admin Home...");
+        loadContent("/fxml/admin-home.fxml", (controller) -> {
+            if (controller instanceof AdminDashboardHomeController) {
+                ((AdminDashboardHomeController) controller).setDashboardController(this);
+            } else if (controller instanceof AdminHomeController) {
+                ((AdminHomeController) controller).setDashboardController(this);
+            }
+        });
         updateActiveButton(dashboardButton);
+    }
+
+    public User getCurrentUser() {
+        return authService != null ? authService.getCurrentUser() : null;
     }
 
     @FXML
@@ -147,6 +202,27 @@ public class DashboardController {
         loadContent("/fxml/role-permission.fxml");
         updateActiveButton(rolePermissionButton);
     }
+    
+    @FXML
+    public void showRapportManagement() {
+        System.out.println("[NAV] Navigation vers Gestion Rapports...");
+        loadContent("/fxml/rapports_reco/main-view.fxml");
+        updateActiveButton(rapportManagementButton);
+    }
+
+    @FXML
+    public void showReclamationManagement() {
+        System.out.println("[NAV] Navigation vers Gestion Réclamations...");
+        loadContent("/views/admin_main.fxml");
+        updateActiveButton(reclamationManagementButton);
+    }
+
+    @FXML
+    public void showMessages() {
+        System.out.println("[NAV] Navigation vers Messagerie...");
+        loadContent("/views/admin_messages.fxml");
+        updateActiveButton(messagesButton);
+    }
 
     @FXML
     public void showProfile() {
@@ -156,11 +232,12 @@ public class DashboardController {
     }
 
     private void updateActiveButton(Button activeButton) {
-        Button[] buttons = {dashboardButton, userManagementButton, rolePermissionButton, statisticsButton, settingsButton};
+        Button[] buttons = {dashboardButton, userManagementButton, rolePermissionButton, statisticsButton, settingsButton, 
+                           auditAnalyticsButton, rapportManagementButton, reclamationManagementButton, messagesButton};
         for (Button btn : buttons) {
             if (btn != null) {
                 if (btn == activeButton) {
-                    btn.setStyle("-fx-background-color: #34495e; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand; -fx-font-weight: bold;");
+                    btn.setStyle("-fx-background-color: #3498db; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand; -fx-font-weight: bold;");
                 } else {
                     btn.setStyle("-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;");
                 }
@@ -193,36 +270,53 @@ public class DashboardController {
     }
 
     private void loadContent(String fxmlPath, java.util.function.Consumer<Object> controllerConsumer) {
-        try {
-            if (contentArea == null) return;
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlPath));
-            if (loader.getLocation() == null) return;
-            
-            Parent content = loader.load();
-
-            // Passer les services au contrôleur si nécessaire
-            Object controller = loader.getController();
-            
-            if (controllerConsumer != null) {
-                controllerConsumer.accept(controller);
-            }
-
-            if (controller instanceof UserManagementController) {
-                ((UserManagementController) controller).setAuthService(authService);
-            } else if (controller instanceof ProfileController) {
-                ((ProfileController) controller).setAuthService(authService);
-            }
-
-            contentArea.getChildren().clear();
-            contentArea.getChildren().add(content);
-            
-            // Remettre le style propre par défaut
-            contentArea.setStyle("-fx-background-color: #ecf0f1;");
-            
-        } catch (Exception e) {
-            e.printStackTrace();
+        // Afficher un indicateur de chargement temporaire
+        if (contentArea != null) {
+            javafx.application.Platform.runLater(() -> {
+                contentArea.getChildren().clear();
+                javafx.scene.control.ProgressIndicator pi = new javafx.scene.control.ProgressIndicator();
+                pi.setMaxSize(50, 50);
+                contentArea.getChildren().add(pi);
+            });
         }
+
+        javafx.application.Platform.runLater(() -> {
+            try {
+                System.out.println("[LOAD] Chargement: " + fxmlPath);
+                java.net.URL resourceUrl = getClass().getResource(fxmlPath);
+                
+                if (resourceUrl == null) {
+                    throw new IOException("FXML introuvable: " + fxmlPath);
+                }
+
+                FXMLLoader loader = new FXMLLoader(resourceUrl);
+                Parent content = loader.load();
+                Object controller = loader.getController();
+
+                if (controllerConsumer != null) {
+                    controllerConsumer.accept(controller);
+                }
+
+                // Injections spécifiques
+                if (controller instanceof UserManagementController) {
+                    ((UserManagementController) controller).setAuthService(authService);
+                } else if (controller instanceof ProfileController) {
+                    ((ProfileController) controller).setAuthService(authService);
+                }
+
+                contentArea.getChildren().clear();
+                contentArea.getChildren().add(content);
+                System.out.println("[LOAD] Affiché: " + fxmlPath);
+
+            } catch (Exception e) {
+                System.err.println("[LOAD] Erreur fatale: " + e.getMessage());
+                e.printStackTrace();
+                contentArea.getChildren().clear();
+                javafx.scene.control.Label err = new javafx.scene.control.Label("Erreur de chargement: " + e.getMessage());
+                err.setStyle("-fx-text-fill: red; -fx-padding: 20;");
+                contentArea.getChildren().add(err);
+            }
+        });
     }
 
     public void updateNotificationBadge() {
@@ -255,10 +349,10 @@ public class DashboardController {
         
         StringBuilder content = new StringBuilder();
         if (notifs.isEmpty()) {
-            content.append("🛡️ Alerte Sécurité : Un e-mail de notification a été envoyé à eleammar21@gmail.com pour confirmer la connexion au tableau de bord.");
+            content.append("� Alerte : E-mail de sécurité envoyé à l'administrateur (eleammar21@gmail.com).");
         } else {
             for (Notification n : notifs) {
-                content.append(n.isRead() ? "✓ " : "🔔 ");
+                content.append(n.isRead() ? "✓ " : "� ");
                 content.append(n.getTitle()).append("\n");
                 content.append("   ").append(n.getMessage()).append("\n\n");
             }

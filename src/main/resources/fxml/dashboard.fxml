@@ -1,18 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.Region?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.geometry.Insets?>
 
 <BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
             fx:id="mainBorderPane"
             fx:controller="com.example.mindjavafx.controller.DashboardController"
+            stylesheets="/styles/modern.css"
             style="-fx-background-color: #ecf0f1;">
     
     <!-- HEADER PROFESSIONNEL -->
@@ -35,6 +30,16 @@
             
             <!-- User info + actions -->
             <HBox spacing="15" alignment="CENTER_RIGHT">
+                <StackPane>
+                    <Button fx:id="notificationButton" onAction="#showNotificationDropdown" 
+                            style="-fx-background-color: transparent; -fx-text-fill: #2c3e50; -fx-font-size: 20px; -fx-cursor: hand;" text="🔔" />
+                    <Label fx:id="notificationBadge" text="+1" visible="true"
+                           style="-fx-background-color: #e74c3c; -fx-text-fill: white; -fx-background-radius: 20; -fx-padding: 4 10; -fx-font-size: 13; -fx-font-weight: bold; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 5, 0, 0, 1);" 
+                           translateX="15" translateY="-12" />
+                </StackPane>
+                
+                <Separator orientation="VERTICAL" prefHeight="30" />
+
                 <VBox alignment="CENTER_RIGHT" spacing="2">
                     <Label fx:id="userWelcomeLabel" style="-fx-font-size: 13; -fx-font-weight: bold; -fx-text-fill: #2c3e50;"/>
                     <Label text="Connecté" style="-fx-font-size: 10; -fx-text-fill: #27ae60; -fx-font-weight: bold;"/>
@@ -51,21 +56,36 @@
     <left>
         <VBox fx:id="sidebarVBox" spacing="8" style="-fx-background-color: #2c3e50; -fx-padding: 25 0; -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0, 2, 0);" prefWidth="240">
             <Label text="NAVIGATION" style="-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: #95a5a6; -fx-padding: 10 25; -fx-letter-spacing: 1;"/>
-            
-            <Button fx:id="statisticsButton" text="📊 Dashboard" onAction="#showStatistics" maxWidth="Infinity" 
+
+            <!-- Dashboard stratégique -->
+            <Button fx:id="dashboardButton" text="🏠 Dashboard" onAction="#showDashboard" maxWidth="Infinity"
                     style="-fx-background-color: #3498db; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand; -fx-font-weight: bold;"/>
-            
-            <Button fx:id="userManagementButton" text="👥 Utilisateurs" onAction="#showUserManagement" maxWidth="Infinity"
+
+
+
+            <!-- Gestion utilisateurs CRUD -->
+            <Button fx:id="userManagementButton" text="👥 Gestion Utilisateurs" onAction="#showUserManagement" maxWidth="Infinity"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
-            
+
+            <!-- Rôles et Permissions -->
             <Button fx:id="rolePermissionButton" text="🔐 Rôles et Permissions" onAction="#showRolePermission" maxWidth="Infinity"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
-            
+
+            <!-- Gestion Réclamations -->
+            <Button fx:id="reclamationManagementButton" text="📬 Gestion Réclamations" onAction="#showReclamationManagement" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+
+
+
+            <!-- Messagerie -->
+            <Button fx:id="messagesButton" text="💬 Messagerie" onAction="#showMessages" maxWidth="Infinity"
+                    style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
+
             <!-- Separator -->
             <VBox style="-fx-padding: 20 0;"/>
-            
+
             <Label text="SYSTÈME" style="-fx-font-weight: bold; -fx-font-size: 10; -fx-text-fill: #95a5a6; -fx-padding: 10 25; -fx-letter-spacing: 1;"/>
-            
+
             <Button fx:id="settingsButton" text="⚙️ Paramètres" onAction="#showProfile" maxWidth="Infinity"
                     style="-fx-background-color: transparent; -fx-text-fill: white; -fx-alignment: CENTER_LEFT; -fx-padding: 15 25; -fx-font-size: 13; -fx-cursor: hand;"/>
         </VBox>

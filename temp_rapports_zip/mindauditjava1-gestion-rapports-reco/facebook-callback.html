@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Facebook Login - MindAudit</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: white;
+            color: #333;
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 500px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+        }
+        h1 { color: #1877f2; }
+        .success { color: #28a745; font-size: 48px; }
+        .code { 
+            background: #f0f0f0; 
+            padding: 15px; 
+            border-radius: 5px; 
+            font-family: monospace;
+            word-break: break-all;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success">✅</div>
+        <h1>Authentification Facebook réussie!</h1>
+        <p>Vous pouvez fermer cette fenêtre et retourner à l'application.</p>
+        <div class="code" id="token"></div>
+    </div>
+    
+    <script>
+        // Extraire le token de l'URL (fragment)
+        const hash = window.location.hash.substring(1);
+        const params = new URLSearchParams(hash);
+        const accessToken = params.get('access_token');
+        
+        if (accessToken) {
+            document.getElementById('token').textContent = 'Token: ' + accessToken.substring(0, 20) + '...';
+            
+            // Envoyer le token à l'application Java via localhost
+            fetch('http://localhost:8082/callback?token=' + accessToken)
+                .then(() => console.log('Token envoyé'))
+                .catch(err => console.error('Erreur:', err));
+        }
+    </script>
+</body>
+</html>

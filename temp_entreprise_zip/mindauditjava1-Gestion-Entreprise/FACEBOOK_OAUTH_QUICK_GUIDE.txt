@@ -1,0 +1,100 @@
+═══════════════════════════════════════════════════════════════
+🔵 FACEBOOK OAUTH - GUIDE RAPIDE
+═══════════════════════════════════════════════════════════════
+
+✅ CODE CRÉÉ - Prêt à configurer!
+
+📝 CE QUI A ÉTÉ FAIT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. ✅ FacebookOAuthService.java - CRÉÉ
+   - Serveur local sur port 8082
+   - Flux OAuth complet (code → token → user info)
+   - Gestion du callback automatique
+
+2. ✅ LoginController.java - MODIFIÉ
+   - Méthode handleFacebookLogin() implémentée
+   - Même logique que Google OAuth
+   - Gestion des utilisateurs sans email
+
+3. ✅ Import ajouté pour FacebookOAuthService
+
+═══════════════════════════════════════════════════════════════
+⚠️ ACTION REQUISE - VOUS DEVEZ FAIRE CECI:
+═══════════════════════════════════════════════════════════════
+
+🔴 CONFIGURATION FACEBOOK REQUISE:
+
+1. Allez sur: https://developers.facebook.com/
+
+2. Créez une app:
+   - Nom: MindAudit
+   - Type: Consommateur
+
+3. Ajoutez Facebook Login:
+   - Produits → + Ajouter → Facebook Login
+
+4. Configurez les URI:
+   - Facebook Login → Paramètres
+   - URI de redirection: http://localhost:8082/callback
+
+5. Récupérez les identifiants:
+   - Paramètres → De base
+   - Copiez APP_ID et APP_SECRET
+
+6. Mettez à jour le code:
+   - Fichier: FacebookOAuthService.java
+   - Lignes 18-19:
+     private static final String APP_ID = "VOTRE_APP_ID";
+     private static final String APP_SECRET = "VOTRE_APP_SECRET";
+
+7. Recompilez: ./compile.bat
+
+═══════════════════════════════════════════════════════════════
+🎯 COMMENT ÇA VA MARCHER:
+═══════════════════════════════════════════════════════════════
+
+1. User écrit son email
+2. User clique "Continuer avec Facebook"
+3. Navigateur s'ouvre → Page Facebook
+4. User se connecte avec Facebook
+5. Facebook redirige vers http://localhost:8082/callback
+6. L'application reçoit le code d'autorisation
+7. L'application échange le code contre un access token
+8. L'application récupère nom + email de Facebook
+9. Si pas d'email → utilise facebook_id@facebook.local
+10. Si user n'existe pas → création automatique
+11. Dashboard s'ouvre
+
+═══════════════════════════════════════════════════════════════
+📧 PERMISSIONS DEMANDÉES:
+═══════════════════════════════════════════════════════════════
+
+- email: Pour récupérer l'adresse email
+- public_profile: Pour récupérer nom et photo
+
+═══════════════════════════════════════════════════════════════
+🔧 PORTS UTILISÉS:
+═══════════════════════════════════════════════════════════════
+
+- Google OAuth: Port 8081
+- Facebook OAuth: Port 8082
+- API REST: Port 9000
+
+═══════════════════════════════════════════════════════════════
+✅ APRÈS CONFIGURATION:
+═══════════════════════════════════════════════════════════════
+
+Le code est PRÊT! Juste:
+1. Créer l'app Facebook
+2. Configurer Facebook Login
+3. Copier APP_ID et APP_SECRET
+4. Compiler
+5. Tester
+
+═══════════════════════════════════════════════════════════════
+
+Pour plus de détails, voir: FACEBOOK_OAUTH_SETUP.md
+
+🔵 Facebook OAuth est plus simple que Google OAuth!
+Pas besoin d'écran de consentement complexe! 🚀

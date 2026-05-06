@@ -42,10 +42,15 @@ public class GoogleOAuthService {
      * Retourne les informations de l'utilisateur Google
      */
     public static Map<String, String> authenticate(String emailHint) {
-        ServerSocket serverSocket = null;
-        try {
-            // 1. Démarrer un serveur local pour recevoir le callback
-            serverSocket = new ServerSocket(8081);
+        lastError = null;
+        
+        // Utiliser un try-with-resources pour s'assurer que le ServerSocket est toujours fermé
+        try (ServerSocket serverSocket = new ServerSocket()) {
+            // Activer la réutilisation de l'adresse pour éviter "Address already in use" 
+            // si le port est en état TIME_WAIT
+            serverSocket.setReuseAddress(true);
+            serverSocket.bind(new java.net.InetSocketAddress(8081));
+            
             System.out.println("[Google OAuth] Serveur local démarré sur le port 8081");
             
             // 2. Ouvrir le navigateur pour l'authentification Google
@@ -53,79 +58,76 @@ public class GoogleOAuthService {
             Desktop.getDesktop().browse(new URI(authorizationUrl));
             System.out.println("[Google OAuth] Navigateur ouvert pour l'authentification");
             
-            // 3. Attendre le callback de Google
-            System.out.println("[Google OAuth] En attente du callback...");
-            Socket socket = serverSocket.accept();
-            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            // 3. Attendre le callback de Google (avec un timeout de 2 minutes pour ne pas bloquer indéfiniment)
+            serverSocket.setSoTimeout(120000); 
+            System.out.println("[Google OAuth] En attente du callback (timeout 2min)...");
             
-            // 4. Lire la requête HTTP
-            String line = in.readLine();
-            String authorizationCode = null;
-            
-            if (line != null && line.startsWith("GET")) {
-                String[] parts = line.split(" ");
-                if (parts.length > 1) {
-                    String path = parts[1];
-                    if (path.contains("code=")) {
-                        authorizationCode = path.substring(path.indexOf("code=") + 5);
-                        if (authorizationCode.contains("&")) {
-                            authorizationCode = authorizationCode.substring(0, authorizationCode.indexOf("&"));
+            try (Socket socket = serverSocket.accept();
+                 BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                 OutputStream out = socket.getOutputStream()) {
+                
+                // 4. Lire la requête HTTP
+                String line = in.readLine();
+                String authorizationCode = null;
+                
+                if (line != null && line.startsWith("GET")) {
+                    String[] parts = line.split(" ");
+                    if (parts.length > 1) {
+                        String path = parts[1];
+                        if (path.contains("code=")) {
+                            authorizationCode = path.substring(path.indexOf("code=") + 5);
+                            if (authorizationCode.contains("&")) {
+                                authorizationCode = authorizationCode.substring(0, authorizationCode.indexOf("&"));
+                            }
+                            authorizationCode = java.net.URLDecoder.decode(authorizationCode, "UTF-8");
                         }
-                        // Décoder l'URL pour enlever les %2F, %3A, etc.
-                        authorizationCode = java.net.URLDecoder.decode(authorizationCode, "UTF-8");
                     }
                 }
+                
+                // 5. Envoyer une réponse au navigateur
+                String response = "HTTP/1.1 200 OK\r\n" +
+                                "Content-Type: text/html\r\n" +
+                                "Connection: close\r\n" +
+                                "\r\n" +
+                                "<html><body style='font-family: Arial; text-align: center; padding: 50px;'>" +
+                                "<h1 style='color: #4285f4;'>✅ Authentification réussie!</h1>" +
+                                "<p>Vous pouvez fermer cette fenêtre et retourner à l'application.</p>" +
+                                "<script>setTimeout(function(){ window.close(); }, 2000);</script>" +
+                                "</body></html>";
+                out.write(response.getBytes(StandardCharsets.UTF_8));
+                out.flush();
+                
+                if (authorizationCode == null) {
+                    lastError = "Code d'autorisation non reçu du navigateur.";
+                    System.err.println("[Google OAuth] " + lastError);
+                    return null;
+                }
+                
+                System.out.println("[Google OAuth] Code reçu, échange en cours...");
+                
+                // 6. Échanger le code contre un access token
+                String accessToken = exchangeCodeForToken(authorizationCode);
+                if (accessToken == null) {
+                    lastError = "Échec de l'échange du code contre un token.";
+                    return null;
+                }
+                
+                // 7. Récupérer les informations de l'utilisateur
+                return getUserInfo(accessToken);
             }
             
-            // 5. Envoyer une réponse au navigateur avec auto-fermeture
-            OutputStream out = socket.getOutputStream();
-            String response = "HTTP/1.1 200 OK\r\n" +
-                            "Content-Type: text/html\r\n" +
-                            "\r\n" +
-                            "<html><body style='font-family: Arial; text-align: center; padding: 50px;'>" +
-                            "<h1 style='color: #4285f4;'>✅ Authentification réussie!</h1>" +
-                            "<p>Redirection vers l'application...</p>" +
-                            "<script>setTimeout(function(){ window.close(); }, 1000);</script>" +
-                            "</body></html>";
-            out.write(response.getBytes());
-            out.flush();
-            socket.close();
-            
-            if (authorizationCode == null) {
-                System.err.println("[Google OAuth] Code d'autorisation non reçu");
-                return null;
-            }
-            
-            System.out.println("[Google OAuth] Code d'autorisation reçu: " + authorizationCode.substring(0, 10) + "...");
-            
-            // 6. Échanger le code contre un access token
-            String accessToken = exchangeCodeForToken(authorizationCode);
-            if (accessToken == null) {
-                System.err.println("[Google OAuth] Échec de l'obtention du token");
-                return null;
-            }
-            
-            System.out.println("[Google OAuth] Access token obtenu");
-            
-            // 7. Récupérer les informations de l'utilisateur
-            Map<String, String> userInfo = getUserInfo(accessToken);
-            System.out.println("[Google OAuth] Informations utilisateur récupérées");
-            
-            return userInfo;
-            
+        } catch (java.net.BindException e) {
+            lastError = "Le port 8081 est déjà utilisé par une autre application. Veuillez fermer les applications utilisant ce port (ex: McAfee, Jenkins).";
+            System.err.println("[Google OAuth] Port occupé: " + e.getMessage());
+            return null;
+        } catch (java.net.SocketTimeoutException e) {
+            lastError = "L'authentification a expiré (timeout 2min).";
+            System.err.println("[Google OAuth] Timeout");
+            return null;
         } catch (Exception e) {
-            lastError = e.getMessage();
-            System.err.println("[Google OAuth] Erreur: " + e.getMessage());
+            lastError = "Erreur: " + e.getMessage();
             e.printStackTrace();
             return null;
-        } finally {
-            if (serverSocket != null) {
-                try {
-                    serverSocket.close();
-                } catch (Exception e) {
-                    // Ignorer
-                }
-            }
         }
     }
     

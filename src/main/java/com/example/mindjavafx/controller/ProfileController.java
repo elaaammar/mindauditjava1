@@ -32,7 +32,7 @@ public class ProfileController {
 
     private AuthenticationService authService;
     private UserService userService;
-    private ProfessionalDashboardController dashboardController;
+    private Object dashboardController;
 
     @FXML
     public void initialize() {
@@ -44,7 +44,7 @@ public class ProfileController {
         loadProfile();
     }
 
-    public void setDashboardController(ProfessionalDashboardController dashboardController) {
+    public void setDashboardController(Object dashboardController) {
         this.dashboardController = dashboardController;
     }
 
@@ -115,7 +115,11 @@ public class ProfileController {
                 showSuccess(profileMessageLabel, "✓ Profil mis à jour avec succès !");
                 loadProfile(); // Refresh local UI
                 if (dashboardController != null) {
-                    dashboardController.refreshUserInfo(); // Refresh header
+                    try {
+                        dashboardController.getClass().getMethod("refreshUserInfo").invoke(dashboardController);
+                    } catch (Exception e) {
+                        // Ignore if method doesn't exist
+                    }
                 }
             } else {
                 showError(profileMessageLabel, "Échec de la mise à jour en base de données.");

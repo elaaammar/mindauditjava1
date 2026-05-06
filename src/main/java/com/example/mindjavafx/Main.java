@@ -14,6 +14,7 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+        com.gestionaudit.MainFx.setPrimaryStage(stage);
         // Démarrer le serveur API REST dans un thread séparé
         new Thread(() -> {
             try {
@@ -37,6 +38,13 @@ public class Main extends Application {
         stage.setResizable(false);
         stage.initStyle(StageStyle.UNDECORATED); // Pas de barre de titre pour le splash
         stage.setMaximized(true); // Prendre toute la page
+        
+        // S'assurer que le processus Java meurt quand on clique sur X (si le style change)
+        stage.setOnCloseRequest(event -> {
+            javafx.application.Platform.exit();
+            System.exit(0);
+        });
+        
         stage.show();
     }
 
@@ -44,6 +52,8 @@ public class Main extends Application {
     public void stop() {
         // Arrêter le serveur API quand l'application se ferme
         RestApiServer.stop();
+        System.out.println("Arrêt complet de l'application JavaFX.");
+        System.exit(0); // Force kill the JVM to ensure no duplicate windows or phantom processes remain
     }
 
     public static void main(String[] args) {

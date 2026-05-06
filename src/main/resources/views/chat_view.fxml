@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" 
+      fx:controller="com.gestionaudit.controllers.ChatController"
+      spacing="15" prefWidth="600" prefHeight="700" styleClass="main-container" stylesheets="/styles/modern.css">
+    
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <!-- Header -->
+    <HBox alignment="CENTER_LEFT" spacing="15">
+        <Label fx:id="chatTitle" text="Chat" styleClass="header-title" HBox.hgrow="ALWAYS" maxWidth="Infinity"/>
+        <Label fx:id="statusLabel" text="Statut" styleClass="status-badge"/>
+    </HBox>
+    <Separator styleClass="premium-separator"/>
+
+    <!-- Admin specific controls -->
+    <HBox fx:id="adminControls" spacing="10" alignment="CENTER_LEFT">
+        <Label text="Changer le statut:" styleClass="form-label"/>
+        <ComboBox fx:id="statusUpdateCombo" styleClass="combo-box"/>
+    </HBox>
+
+    <!-- Chat Area -->
+    <ScrollPane fx:id="scrollPane" fitToWidth="true" VBox.vgrow="ALWAYS" styleClass="chat-container" 
+                style="-fx-background-color: transparent; -fx-background: transparent; -fx-border-color: transparent;">
+        <content>
+            <VBox fx:id="messageContainer" spacing="15">
+                <padding>
+                    <Insets top="15" right="15" bottom="15" left="15"/>
+                </padding>
+            </VBox>
+        </content>
+    </ScrollPane>
+
+    <!-- Input Area -->
+    <HBox spacing="10" alignment="BOTTOM_CENTER">
+        <TextArea fx:id="messageInput" promptText="Écrivez votre message..." prefHeight="60" wrapText="true" HBox.hgrow="ALWAYS" styleClass="text-area"/>
+        <Button text="Envoyer" onAction="#handleSendMessage" styleClass="btn, btn-primary" prefHeight="60"/>
+    </HBox>
+
+</VBox>

@@ -1,0 +1,100 @@
+═══════════════════════════════════════════════════════════════
+🔵 IDENTIFIANTS FACEBOOK À METTRE À JOUR
+═══════════════════════════════════════════════════════════════
+
+📁 FICHIER: src/main/java/com/example/mindjavafx/service/FacebookOAuthService.java
+
+📍 LIGNES: 18-19
+
+═══════════════════════════════════════════════════════════════
+
+ACTUELLEMENT (Valeurs temporaires):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+private static final String APP_ID = "YOUR_FACEBOOK_APP_ID";
+private static final String APP_SECRET = "YOUR_FACEBOOK_APP_SECRET";
+
+═══════════════════════════════════════════════════════════════
+
+À REMPLACER PAR (Vos vrais identifiants):
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+private static final String APP_ID = "VOTRE_FACEBOOK_APP_ID_ICI";
+private static final String APP_SECRET = "VOTRE_FACEBOOK_APP_SECRET_ICI";
+
+═══════════════════════════════════════════════════════════════
+
+🔧 COMMENT OBTENIR LES IDENTIFIANTS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Allez sur: https://developers.facebook.com/
+
+2. Connectez-vous avec votre compte Facebook
+
+3. Cliquez: "Créer une app"
+
+4. Choisissez: "Consommateur" ou "Autre"
+
+5. Nom de l'app: MindAudit
+
+6. Email: votre email
+
+7. Cliquez: "Créer l'app"
+
+8. Dans le tableau de bord:
+   - Cliquez: "+ Ajouter un produit"
+   - Trouvez: "Facebook Login"
+   - Cliquez: "Configurer"
+
+9. Configurez Facebook Login:
+   - Allez dans: Facebook Login → Paramètres
+   - URI de redirection OAuth valides: http://localhost:8082/callback
+   - Cliquez: "Enregistrer les modifications"
+
+10. Récupérez les identifiants:
+    - Allez dans: Paramètres → De base
+    - ID de l'app: COPIEZ cette valeur (ex: 1234567890123456)
+    - Clé secrète de l'app: Cliquez "Afficher" et COPIEZ
+
+11. Mettez à jour le code:
+    - Ouvrez: FacebookOAuthService.java
+    - Remplacez les lignes 18-19 avec vos valeurs
+    - Sauvegardez
+
+12. Recompilez: ./compile.bat
+
+13. Testez!
+
+═══════════════════════════════════════════════════════════════
+
+✅ EXEMPLE DE VALEURS:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+private static final String APP_ID = "1234567890123456";
+private static final String APP_SECRET = "abcd1234efgh5678ijkl9012mnop3456";
+
+═══════════════════════════════════════════════════════════════
+
+⚠️ IMPORTANT:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Gardez votre APP_SECRET secret!
+- Ne le partagez jamais publiquement
+- L'app sera en mode "Développement" au début
+- Ajoutez votre compte comme testeur si nécessaire
+
+═══════════════════════════════════════════════════════════════
+
+🎯 APRÈS MISE À JOUR:
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Le bouton "Continuer avec Facebook" fonctionnera!
+
+Le flux sera:
+1. Clic sur le bouton
+2. Navigateur s'ouvre avec Facebook
+3. Connexion Facebook
+4. Redirection automatique
+5. Dashboard s'ouvre
+
+═══════════════════════════════════════════════════════════════
